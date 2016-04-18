@@ -1,7 +1,7 @@
 var assign = require("can-util/js/assign/");
-var deepAssign = require("can-util/js/deepExtend/");
+var deepAssign = require("can-util/js/deep-extend/");
 var dev = require("can-util/js/dev/");
-var makeArray = require("can-util/js/makeArray/");
+var makeArray = require("can-util/js/make-array/");
 
 
 // ## construct.js

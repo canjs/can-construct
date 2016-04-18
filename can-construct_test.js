@@ -2,7 +2,7 @@
 QUnit = require('steal-qunit');
 var Construct = require('can-construct');
 var dev = require("can-util/js/dev/");
-var makeArray = require("can-util/js/makeArray/");
+var makeArray = require("can-util/js/make-array/");
 
 QUnit.module('can-construct', {
 	setup: function () {
