@@ -13,6 +13,15 @@ var makeArray = require("can-util/js/make-array/");
 // initializing it's bindings.
 var initializing = 0;
 
+/**
+ * @add Construct
+ */
+var Construct = function () {
+	if (arguments.length) {
+		return Construct.extend.apply(Construct, arguments);
+	}
+};
+
 var canGetDescriptor;
 try {
 	Object.getOwnPropertyDescriptor({});
@@ -47,15 +56,6 @@ var getDescriptor = function(newProps, name) {
 			Construct._overwrite(addTo, oldProps, name, newProps[name]);
 		}
 	};
-
-/**
- * @add Construct
- */
-var Construct = function () {
-	if (arguments.length) {
-		return Construct.extend.apply(Construct, arguments);
-	}
-};
 /**
  * @static
  */
@@ -290,7 +290,7 @@ assign(Construct, {
 	 * Child.base; // Parent
 	 * ```
 	 */
-	setup: function (base, fullName) {
+	setup: function (base) {
 		this.defaults = deepAssign(true, {}, base.defaults, this.defaults);
 	},
 	// Create's a new `class` instance without initializing by setting the
@@ -459,7 +459,7 @@ assign(Construct, {
 		proto = proto || {};
 		var _super_class = this,
 			_super = this.prototype,
-			Constructor, parts, current, _fullName, _shortName, propName, shortName, namespace, prototype;
+			Constructor, namespace, prototype;
 		// Instantiate a base class (but only create the instance,
 		// don't run the init constructor).
 		prototype = this.instance();
@@ -487,13 +487,6 @@ assign(Construct, {
 		/* jshint ignore:end */
 		//!steal-remove-end
 
-		// Make sure Constructor is still defined when the constructor name
-		// code is removed.
-		if(typeof constructorName === 'undefined') {
-			Constructor = function() {
-				return init.apply(this, arguments);
-			};
-		}
 		// The dummy class constructor.
 		function init() {
 			// All construction is actually done in the init method.
@@ -513,8 +506,17 @@ assign(Construct, {
 				Constructor.newInstance.apply(Constructor, arguments);
 			}
 		}
+
+		// Make sure Constructor is still defined when the constructor name
+		// code is removed.
+		if(typeof constructorName === 'undefined') {
+			Constructor = function() {
+				return init.apply(this, arguments);
+			};
+		}
+		
 		// Copy old stuff onto class (can probably be merged w/ inherit)
-		for (propName in _super_class) {
+		for (var propName in _super_class) {
 			if (_super_class.hasOwnProperty(propName)) {
 				Constructor[propName] = _super_class[propName];
 			}
