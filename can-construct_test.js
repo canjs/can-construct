@@ -1,4 +1,3 @@
-/* global Foo, Car, Bar */
 QUnit = require('steal-qunit');
 var Construct = require('can-construct');
 var dev = require("can-util/js/dev/");
@@ -150,12 +149,13 @@ if (dev) {
 //!steal-remove-end
 
 test("setup called with original arguments", function(){
+	var o2 = {};
 	var o1 = {
 		setup: function(base, arg1, arg2){
 			equal(o1, arg1, "first argument is correct");
 			equal(o2, arg2, "second argument is correct");
 		}
 	};
-	var o2 = {};
-	Construct.extend(o1,o2);
+	
+	Construct.extend(o1, o2);
 });
