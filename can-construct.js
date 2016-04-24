@@ -2,7 +2,7 @@ var assign = require("can-util/js/assign/");
 var deepAssign = require("can-util/js/deep-extend/");
 var dev = require("can-util/js/dev/");
 var makeArray = require("can-util/js/make-array/");
-
+var types = require('can-util/js/types/types');
 
 // ## construct.js
 // `Construct`
@@ -514,7 +514,7 @@ assign(Construct, {
 				return init.apply(this, arguments);
 			};
 		}
-		
+
 		// Copy old stuff onto class (can probably be merged w/ inherit)
 		for (var propName in _super_class) {
 			if (_super_class.hasOwnProperty(propName)) {
@@ -732,5 +732,11 @@ Construct.prototype.setup = function () {};
  * the inheritance chain.
  */
 Construct.prototype.init = function () {};
+
+var oldIsConstructor = types.isConstructor;
+types.isConstructor = function(obj){
+	return obj.prototype instanceof Construct || oldIsConstructor.call(null, obj);
+};
+
 
 module.exports = exports = Construct;
