@@ -5,7 +5,7 @@ var makeArray = require("can-util/js/make-array/");
 
 QUnit.module('can-construct', {
 	setup: function () {
-		var Animal = this.Animal = Construct({
+		var Animal = this.Animal = Construct.extend({
 			count: 0,
 			test: function () {
 				return this.match ? true : false;
@@ -16,7 +16,7 @@ QUnit.module('can-construct', {
 				this.eyes = false;
 			}
 		});
-		var Dog = this.Dog = this.Animal({
+		var Dog = this.Dog = this.Animal.extend({
 			match: /abc/
 		}, {
 			init: function () {
@@ -26,7 +26,7 @@ QUnit.module('can-construct', {
 				return 'Woof';
 			}
 		});
-		this.Ajax = this.Dog({
+		this.Ajax = this.Dog.extend({
 			count: 0
 		}, {
 			init: function (hairs) {
@@ -156,6 +156,6 @@ test("setup called with original arguments", function(){
 			equal(o2, arg2, "second argument is correct");
 		}
 	};
-	
+
 	Construct.extend(o1, o2);
 });

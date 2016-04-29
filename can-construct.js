@@ -1,3 +1,4 @@
+"use strict";
 var assign = require("can-util/js/assign/");
 var deepAssign = require("can-util/js/deep-extend/");
 var dev = require("can-util/js/dev/");
@@ -197,9 +198,14 @@ assign(Construct, {
 			args;
 		// Call `setup` if there is a `setup`
 		if (inst.setup) {
-			inst.__inSetup = true;
+			Object.defineProperty(inst,"__inSetup",{
+				configurable: true,
+				enumerable: false,
+				value: true,
+				writable: true
+			});
 			args = inst.setup.apply(inst, arguments);
-			delete inst.__inSetup;
+			inst.__inSetup = false;
 		}
 		// Call `init` if there is an `init`
 		// If `setup` returned `args`, use those as the arguments
@@ -492,14 +498,14 @@ assign(Construct, {
 			// All construction is actually done in the init method.
 			if (!initializing) {
 				//!steal-remove-start
-				if(this.constructor !== Constructor &&
+				if(!this || (this.constructor !== Constructor) &&
 				// We are being called without `new` or we are extending.
 				arguments.length && Constructor.constructorExtends) {
 					dev.warn('can/construct/construct.js: extending a Construct without calling extend');
 				}
 				//!steal-remove-end
 
-				return this.constructor !== Constructor &&
+				return (!this || this.constructor !== Constructor) &&
 				// We are being called without `new` or we are extending.
 				arguments.length && Constructor.constructorExtends ? Constructor.extend.apply(Constructor, arguments) :
 				// We are being called with `new`.
