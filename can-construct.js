@@ -495,6 +495,7 @@ assign(Construct, {
 
 		// The dummy class constructor.
 		function init() {
+			/* jshint validthis: true */
 			// All construction is actually done in the init method.
 			if (!initializing) {
 				//!steal-remove-start
