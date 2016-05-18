@@ -4,6 +4,7 @@ var deepAssign = require("can-util/js/deep-extend/");
 var dev = require("can-util/js/dev/");
 var makeArray = require("can-util/js/make-array/");
 var types = require('can-util/js/types/types');
+var namespace = require('can-util/namespace');
 
 // ## construct.js
 // `Construct`
@@ -746,4 +747,4 @@ types.isConstructor = function(obj){
 };
 
 
-module.exports = exports = Construct;
+module.exports = namespace.Construct = Construct;
