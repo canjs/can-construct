@@ -49,7 +49,7 @@
     "can-util": "^3.0.0-pre.21"
   },
   "devDependencies": {
-    "documentjs": "^0.4.2",
+    "bit-docs": "0.0.5",
     "jshint": "^2.9.1",
     "cssify": "^0.6.0",
     "steal": "^0.16.0",
@@ -63,5 +63,19 @@
   "repository": {
     "type": "git",
     "url": "git://github.com/canjs/can-construct.git"
+  },
+  "bit-docs": {
+    "dependencies": {
+      "bit-docs-glob-finder": "^0.0.5",
+      "bit-docs-dev": "^0.0.3",
+      "bit-docs-js": "^0.0.3",
+      "bit-docs-generate-readme": "^0.0.2"
+    },
+    "glob": {
+      "pattern": "**\/*.{js,md}",
+      "ignore": "node_modules\/**\/*"
+    },
+    "parent": "Construct.extend"
   }
+
 }

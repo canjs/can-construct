@@ -63,7 +63,7 @@ var getDescriptor = function(newProps, name) {
  */
 assign(Construct, {
 	/**
-	 * @property {Boolean} Construct.constructorExtends
+	 * @property {Boolean} Construct.constructorExtends Construct.constructorExtends
 	 * @parent Construct.static
 	 *
 	 * @description
@@ -71,7 +71,7 @@ assign(Construct, {
 	 * without the `new` keyword to extend the constructor function or
 	 * create a new instance.
 	 *
-	 * ```
+	 * ```js
 	 * var animal = Animal();
 	 * // vs
 	 * var animal = new Animal();
@@ -87,7 +87,8 @@ assign(Construct, {
 	 * This property defaults to false.
 	 *
 	 * Example of constructExtends is true:
-	 * ```
+	 *
+	 * ```js
 	 * var Animal = Construct.extend({
 	 *   constructorExtends: true // the constructor extends
 	 * },{
@@ -110,7 +111,8 @@ assign(Construct, {
 	 *```
 	 *
 	 * The default behavior is shown in the example below:
-	 * ```
+	 *
+	 * ```js
 	 * var Animal = Construct.extend({
 	 *   constructorExtends: false // the constructor does NOT extend
 	 * },{
@@ -153,7 +155,7 @@ assign(Construct, {
 	 * instances of Person to prevent duplication. If the properties of a new Person match an existing one it
 	 * will return a reference to the previously created object, otherwise it returns a new object entirely.
 	 *
-	 * ```
+	 * ```js
 	 * // define and create the Person constructor
 	 * var Person = Construct.extend({
 	 *   init : function(first, middle, last) {
@@ -280,7 +282,7 @@ assign(Construct, {
 	 * This `Parent` class adds a reference to its base class to itself, and
 	 * so do all the classes that inherit from it.
 	 *
-	 * ```
+	 * ```js
 	 * Parent = Construct.extend({
 	 *   setup : function(base, fullName, staticProps, protoProps){
 	 *     this.base = base;
@@ -320,13 +322,16 @@ assign(Construct, {
 	 * Extends `Construct`, or constructor functions derived from `Construct`,
 	 * to create a new constructor function. Example:
 	 *
-	 *     var Animal = Construct.extend({
-	 *       sayHi: function(){
-	 *         console.log("hi")
-	 *       }
-	 *     })
-	 *     var animal = new Animal()
-	 *     animal.sayHi();
+	 * ```js
+	 * var Animal = Construct.extend({
+	 *   sayHi: function(){
+	 *     console.log("hi")
+	 *   }
+	 * });
+	 *
+	 * var animal = new Animal()
+	 * animal.sayHi();
+	 * ```
 	 *
 	 * @param {String} [name] Creates the necessary properties and
 	 * objects that point from the `window` to the created constructor function. The following:
@@ -343,7 +348,7 @@ assign(Construct, {
 	 * @param {Object} [staticProperties] Properties that are added the constructor
 	 * function directly. For example:
 	 *
-	 * ```
+	 * ```js
 	 * var Animal = Construct.extend({
 	 *   findAll: function(){
 	 *     return can.ajax({url: "/animals"})
@@ -379,7 +384,8 @@ assign(Construct, {
 	 * are used for initialization.
 	 *
 	 * @return {function} The constructor function.
-	 * ```
+	 *
+	 * ```js
 	 *	var Animal = Construct.extend(...);
 	 *	var pony = new Animal(); // Animal is a constructor function
 	 * ```
@@ -417,7 +423,7 @@ assign(Construct, {
 	 * Static properties can get overridden through inheritance just like instance properties. In the example below,
 	 * we override both the legs static property as well as the the init function for each instance:
 	 *
-	 * ```
+	 * ```js
 	 * var Animal = Construct.extend({
 	 *     legs: 4
 	 * }, {
@@ -545,7 +551,7 @@ assign(Construct, {
 			 * This provides a way organize code and ensure globally unique types. The
 			 * `namespace` is the [Construct.fullName fullName] you passed without the [Construct.shortName shortName].
 			 *
-			 * ```
+			 * ```js
 			 * Construct("MyApplication.MyConstructor",{},{});
 			 * MyApplication.MyConstructor.namespace // "MyApplication"
 			 * MyApplication.MyConstructor.shortName // "MyConstructor"
@@ -560,7 +566,7 @@ assign(Construct, {
 			 * If you pass a name when creating a Construct, the `shortName` property will be set to the
 			 * name you passed without the [Construct.namespace namespace].
 			 *
-			 * ```
+			 * ```js
 			 * Construct("MyApplication.MyConstructor",{},{});
 			 * MyApplication.MyConstructor.namespace // "MyApplication"
 			 * MyApplication.MyConstructor.shortName // "MyConstructor"
@@ -596,7 +602,7 @@ assign(Construct, {
 		 *
 		 * This Construct has a static counter that counts how many instances have been created:
 		 *
-		 * ```
+		 * ```js
 		 * var Counter = Construct.extend({
 		 *     count: 0
 		 * }, {
@@ -698,7 +704,7 @@ Construct.prototype.setup = function () {};
  *
  * First, we'll make a Person constructor that has a first and last name:
  *
- * ```
+ * ```js
  * var Person = Construct.extend({
  *     init: function(first, last) {
  *         this.first = first;
@@ -713,7 +719,7 @@ Construct.prototype.setup = function () {};
  *
  * Then, we'll extend Person into Programmer, and add a favorite language:
  *
- * ```
+ * ```js
  * var Programmer = Person.extend({
  *     init: function(first, last, language) {
  *         // call base's init
