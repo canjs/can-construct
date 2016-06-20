@@ -49,7 +49,7 @@
     "can-util": "^3.0.0-pre.21"
   },
   "devDependencies": {
-    "bit-docs": "0.0.5",
+    "bit-docs": "0.0.7",
     "jshint": "^2.9.1",
     "cssify": "^0.6.0",
     "steal": "^0.16.0",
@@ -72,10 +72,9 @@
       "bit-docs-generate-readme": "^0.0.2"
     },
     "glob": {
-      "pattern": "**\/*.{js,md}",
-      "ignore": "node_modules\/**\/*"
+      "pattern": "**/*.{js,md}",
+      "ignore": "node_modules/**/*"
     },
     "parent": "Construct.extend"
   }
-
 }
