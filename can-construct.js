@@ -1,8 +1,8 @@
 "use strict";
-var assign = require("can-util/js/assign/");
-var deepAssign = require("can-util/js/deep-extend/");
-var dev = require("can-util/js/dev/");
-var makeArray = require("can-util/js/make-array/");
+var assign = require("can-util/js/assign/assign");
+var deepAssign = require("can-util/js/deep-assign/deep-assign");
+var dev = require("can-util/js/dev/dev");
+var makeArray = require("can-util/js/make-array/make-array");
 var types = require('can-util/js/types/types');
 var namespace = require('can-util/namespace');
 
