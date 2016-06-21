@@ -1,6 +1,6 @@
 {
   "name": "can-construct",
-  "version": "3.0.0-pre.5",
+  "version": "3.0.0-pre.6",
   "description": "easy constructor functions",
   "homepage": "http://canjs.com",
   "author": {
@@ -75,7 +75,7 @@
       "pattern": "**/*.{js,md}",
       "ignore": "node_modules/**/*"
     },
-		"readme": {
+    "readme": {
       "apis": "./docs/apis.json"
     },
     "parent": "can-construct"
