@@ -16,7 +16,9 @@ var namespace = require('can-util/namespace');
 var initializing = 0;
 
 /**
- * @add Construct
+ * @module {{}} can-construct can-construct
+ * @parent can-core
+ * @description Makes it easy to create constructor functions.
  */
 var Construct = function () {
 	if (arguments.length) {
@@ -59,12 +61,13 @@ var getDescriptor = function(newProps, name) {
 		}
 	};
 /**
- * @static
+ * @static can-construct.static static
+ * @parent can-construct
  */
 assign(Construct, {
 	/**
-	 * @property {Boolean} Construct.constructorExtends Construct.constructorExtends
-	 * @parent Construct.static
+	 * @property {Boolean} Construct.constructorExtends constructorExtends
+	 * @parent can-construct.static
 	 *
 	 * @description
 	 * Toggles the behavior of a constructor function called
@@ -132,7 +135,7 @@ assign(Construct, {
 	constructorExtends: true,
 	/**
 	 * @function Construct.newInstance newInstance
-	 * @parent Construct.static
+	 * @parent can-construct.static
 	 *
 	 * @description Returns an instance of `Construct`. This method
 	 * can be overridden to return a cached instance.
@@ -240,7 +243,7 @@ assign(Construct, {
 	// include option merging logic.
 	/**
 	 * @function Construct.setup setup
-	 * @parent Construct.static
+	 * @parent can-construct.static
 	 *
 	 * @description Perform initialization logic for a constructor function.
 	 *
@@ -315,7 +318,7 @@ assign(Construct, {
 	// Extends classes.
 	/**
 	 * @function Construct.extend extend
-	 * @parent Construct.static
+	 * @parent can-construct.static
 	 *
 	 * @signature `Construct.extend([name,] [staticProperties,] instanceProperties)`
 	 *
@@ -545,7 +548,7 @@ assign(Construct, {
 			prototype: prototype,
 			/**
 			 * @property {String} Construct.namespace namespace
-			 * @parent Construct.static
+			 * @parent can-construct.static
 			 *
 			 * The `namespace` property returns the namespace your constructor is in.
 			 * This provides a way organize code and ensure globally unique types. The
@@ -561,7 +564,7 @@ assign(Construct, {
 			namespace: namespace,
 			/**
 			 * @property {String} Construct.shortName shortName
-			 * @parent Construct.static
+			 * @parent can-construct.static
 			 *
 			 * If you pass a name when creating a Construct, the `shortName` property will be set to the
 			 * name you passed without the [Construct.namespace namespace].
@@ -587,12 +590,14 @@ assign(Construct, {
 			Constructor.init.apply(Constructor, args || t);
 		}
 		/**
-		 * @prototype
+		 * @prototype can-construct.prototype prototype
+		 *
+		 * Properties / functions on the prototype.
 		 */
 		return Constructor; //
 		/**
 		 * @property {Object} Construct.prototype.constructor constructor
-		 * @parent Construct.prototype
+		 * @parent can-construct.prototype
 		 *
 		 * A reference to the constructor function that created the instance. This allows you to access
 		 * the constructor's static properties from an instance.
@@ -620,7 +625,7 @@ assign(Construct, {
 });
 /**
  * @function Construct.prototype.setup setup
- * @parent Construct.prototype
+ * @parent can-construct.prototype
  *
  * @signature `construct.setup(...args)`
  *
@@ -688,7 +693,7 @@ assign(Construct, {
 Construct.prototype.setup = function () {};
 /**
  * @function Construct.prototype.init init
- * @parent Construct.prototype
+ * @parent can-construct.prototype
  *
  * @description Called when a new instance of a Construct is created.
  *
