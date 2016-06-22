@@ -1,0 +1,13 @@
+[
+	{"can-construct": [
+		"Construct.extend",
+		"Construct.constructorExtends",
+		"Construct.newInstance",
+		"Construct.setup",
+		"Construct.namespace",
+		"Construct.shortName",
+		"Construct.prototype.constructor",
+		"Construct.prototype.setup",
+		"Construct.prototype.init"
+	]}
+]
