@@ -6,10 +6,10 @@ Easily build constructor functions.
 
 
 - <code>[Construct.extend([name,] [staticProperties,] instanceProperties)](#constructextendname-staticproperties-instanceproperties)</code>
-- <code>[Construct.constructorExtends Boolean](#constructconstructorextends-boolean)</code>
+- <code>[constructorExtends Boolean](#constructorextends-boolean)</code>
 - <code>[Construct.newInstance([...args])](#constructnewinstanceargs)</code>
 - <code>[Construct.setup(base, fullName, staticProps, protoProps)](#constructsetupbase-fullname-staticprops-protoprops)</code>
-- <code>[namespace String](#namespace-string)</code>
+- _can-construct.namespace_
 - <code>[shortName String](#shortname-string)</code>
 - <code>[constructor Object](#constructor-object)</code>
 - <code>[construct.setup(...args)](#constructsetupargs)</code>
@@ -18,7 +18,7 @@ Easily build constructor functions.
 ## API
 
 
-### `Construct.extend([name,] [staticProperties,] instanceProperties)`
+## <code>Construct.extend([name,] [staticProperties,] instanceProperties)</code>
 
 
 Extends `Construct`, or constructor functions derived from `Construct`,
@@ -37,40 +37,37 @@ animal.sayHi();
 
 
 1. __name__ <code>{String}</code>:
-  Creates the necessary properties and
-  objects that point from the `window` to the created constructor function. The following:
-  
-      Construct.extend("company.project.Constructor",{})
-  
-  creates a `company` object on window if it does not find one, a
-  `project` object on `company` if it does not find one, and it will set the
-  `Constructor` property on the `project` object to point to the constructor function.
-  
-  Finally, it sets "company.project.Constructor" as [Construct.fullName fullName]
-  and "Constructor" as [shortName](#shortname-string).
-  
+  Adds a name to the constructor function so
+  it is nicely labeled in the developer tools. The following:
+
+      Construct.extend("ConstructorName",{})
+
+  returns a constructur function that will show up as `ConstructorName`
+  in the developer tools.
+  It also sets "ConstructorName" as [shortName](#shortname-string).
+
 1. __staticProperties__ <code>{Object}</code>:
   Properties that are added the constructor
   function directly. For example:
-  
+
   ```js
   var Animal = Construct.extend({
     findAll: function(){
       return can.ajax({url: "/animals"})
     }
   },{}); // need to pass an empty instanceProperties object
-  
+
   Animal.findAll().then(function(json){ ... })
   ```
-  
+
   The [static setup](#constructsetupbase-fullname-staticprops-protoprops) method can be used to
   specify inheritable behavior when a Constructor function is created.
-  
+
 1. __instanceProperties__ <code>{Object}</code>:
   Properties that belong to
   instances made with the constructor. These properties are added to the
   constructor's `prototype` object. Example:
-  
+
       var Animal = Construct.extend({
   	  findAll: function() {
   		return can.ajax({url: "/animals"});
@@ -85,19 +82,19 @@ animal.sayHi();
       })
       var pony = new Animal("Gertrude");
       pony.sayHi(); // "Gertrude says hai!"
-  
+
   The [init](#constructinitargs) and [setup](#constructsetupargs) properties
   are used for initialization.
-  
+
 
 - __returns__ <code>{function}</code>:
   The constructor function.
-  
+
   ```js
   var Animal = Construct.extend(...);
   var pony = new Animal(); // Animal is a constructor function
   ```
-### Construct.constructorExtends `{Boolean}`
+## constructorExtends `{Boolean}`
 
   Toggles the behavior of a constructor function called
  without the `new` keyword to extend the constructor function or
@@ -112,10 +109,10 @@ animal.sayHi();
 
 
 
-#### `Boolean`
+### <code>Boolean</code>
 
 
-### `Construct.newInstance([...args])`
+## <code>Construct.newInstance([...args])</code>
 
 
 
@@ -126,9 +123,9 @@ animal.sayHi();
 
 - __returns__ <code>{class}</code>:
   instance of the class
-  
 
-### `Construct.setup(base, fullName, staticProps, protoProps)`
+
+## <code>Construct.setup(base, fullName, staticProps, protoProps)</code>
 
 
 A static `setup` method provides inheritable setup functionality
@@ -159,29 +156,18 @@ functions that inherit from Group will be added to
   The static properties of the new constructor.
 1. __protoProps__ <code>{Object}</code>:
   The prototype properties of the new constructor.
-  
-### namespace `{String}`
 
-
-The `namespace` property returns the namespace your constructor is in.
-This provides a way organize code and ensure globally unique types. The
-`namespace` is the [Construct.fullName fullName] you passed without the [shortName](#shortname-string).
-
-
-
-#### `String`
-
-### shortName `{String}`
+## shortName `{String}`
 
 
 If you pass a name when creating a Construct, the `shortName` property will be set to the
-name you passed without the [namespace](#namespace-string).
+name.
 
 
 
-#### `String`
+### <code>String</code>
 
-### constructor `{Object}`
+## constructor `{Object}`
 
 
 A reference to the constructor function that created the instance. This allows you to access
@@ -189,10 +175,10 @@ the constructor's static properties from an instance.
 
 
 
-#### `Object`
+### <code>Object</code>
 
 
-### `construct.setup(...args)`
+## <code>construct.setup(...args)</code>
 
 
 A setup function for the instantiation of a constructor function.
@@ -200,35 +186,35 @@ A setup function for the instantiation of a constructor function.
 
 1. __args__ <code>{*}</code>:
   The arguments passed to the constructor.
-  
+
 
 - __returns__ <code>{Array|undefined}</code>:
   If an array is returned, the array's items are passed as
   arguments to [init](#constructinitargs). The following example always makes
   sure that init is called with a jQuery wrapped element:
-  
+
       WidgetFactory = Construct.extend({
           setup: function(element){
               return [$(element)]
           }
       })
-  
+
       MyWidget = WidgetFactory.extend({
           init: function($el){
               $el.html("My Widget!!")
           }
       })
-  
+
   Otherwise, the arguments to the
   constructor are passed to [init](#constructinitargs) and the return value of `setup` is discarded.
-  
 
-### `construct.init(...args)`
+
+## <code>construct.init(...args)</code>
 
 
 1. __args__ <code>{*}</code>:
   the arguments passed to the constructor (or the items of the array returned from [setup](#constructsetupargs))
-    
+
 
 ## Contributing
 

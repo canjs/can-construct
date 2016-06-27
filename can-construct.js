@@ -14,11 +14,8 @@ var namespace = require('can-util/namespace');
 // A private flag used to initialize a new class instance without
 // initializing it's bindings.
 var initializing = 0;
-
 /**
- * @module {{}} can-construct can-construct
- * @parent can-core
- * @description Makes it easy to create constructor functions.
+ * @add can-construct
  */
 var Construct = function () {
 	if (arguments.length) {
@@ -61,12 +58,11 @@ var getDescriptor = function(newProps, name) {
 		}
 	};
 /**
- * @static can-construct.static static
- * @parent can-construct
+ * @static
  */
 assign(Construct, {
 	/**
-	 * @property {Boolean} Construct.constructorExtends constructorExtends
+	 * @property {Boolean} can-construct.constructorExtends constructorExtends
 	 * @parent can-construct.static
 	 *
 	 * @description
@@ -89,7 +85,7 @@ assign(Construct, {
 	 *
 	 * This property defaults to false.
 	 *
-	 * Example of constructExtends is true:
+	 * Example of constructExtends as `true`:
 	 *
 	 * ```js
 	 * var Animal = Construct.extend({
@@ -130,11 +126,11 @@ assign(Construct, {
 	 * pony.sayHi() // "hai!"
 	 * frank.sayHi() // "hai!"
 	 *```
-	 * By default to extend a constructor, you must use [Construct.extend extend].
+	 * By default to extend a constructor, you must use [can-construct.extend extend].
 	 */
 	constructorExtends: true,
 	/**
-	 * @function Construct.newInstance newInstance
+	 * @function can-construct.newInstance newInstance
 	 * @parent can-construct.static
 	 *
 	 * @description Returns an instance of `Construct`. This method
@@ -142,8 +138,8 @@ assign(Construct, {
 	 *
 	 * @signature `Construct.newInstance([...args])`
 	 *
-	 * @param {*} [args] arguments that get passed to [Construct::setup] and [Construct::init]. Note
-	 * that if [Construct::setup] returns an array, those arguments will be passed to [Construct::init]
+	 * @param {*} [args] arguments that get passed to [can-construct::setup] and [can-construct::init]. Note
+	 * that if [can-construct::setup] returns an array, those arguments will be passed to [can-construct::init]
 	 * instead.
 	 * @return {class} instance of the class
 	 *
@@ -242,7 +238,7 @@ assign(Construct, {
 	// object's `defaults`. If you overwrite this method, make sure to
 	// include option merging logic.
 	/**
-	 * @function Construct.setup setup
+	 * @function can-construct.setup setup
 	 * @parent can-construct.static
 	 *
 	 * @description Perform initialization logic for a constructor function.
@@ -278,7 +274,7 @@ assign(Construct, {
 	 * function is created and
 	 * set to inherit from its base constructor. It is useful for setting up
 	 * additional inheritance work.
-	 * Do not confuse this with the prototype `[Construct::setup]` method.
+	 * Do not confuse this with the prototype `[can-construct::setup]` method.
 	 *
 	 * ## Example
 	 *
@@ -317,7 +313,7 @@ assign(Construct, {
 	},
 	// Extends classes.
 	/**
-	 * @function Construct.extend extend
+	 * @function can-construct.extend extend
 	 * @parent can-construct.static
 	 *
 	 * @signature `Construct.extend([name,] [staticProperties,] instanceProperties)`
@@ -336,17 +332,14 @@ assign(Construct, {
 	 * animal.sayHi();
 	 * ```
 	 *
-	 * @param {String} [name] Creates the necessary properties and
-	 * objects that point from the `window` to the created constructor function. The following:
+	 * @param {String} [name] Adds a name to the constructor function so
+	 * it is nicely labeled in the developer tools. The following:
 	 *
-	 *     Construct.extend("company.project.Constructor",{})
+	 *     Construct.extend("ConstructorName",{})
 	 *
-	 * creates a `company` object on window if it does not find one, a
-	 * `project` object on `company` if it does not find one, and it will set the
-	 * `Constructor` property on the `project` object to point to the constructor function.
-	 *
-	 * Finally, it sets "company.project.Constructor" as [Construct.fullName fullName]
-	 * and "Constructor" as [Construct.shortName shortName].
+	 * returns a constructur function that will show up as `ConstructorName`
+	 * in the developer tools.
+	 * It also sets "ConstructorName" as [can-construct.shortName shortName].
 	 *
 	 * @param {Object} [staticProperties] Properties that are added the constructor
 	 * function directly. For example:
@@ -361,7 +354,7 @@ assign(Construct, {
 	 * Animal.findAll().then(function(json){ ... })
 	 * ```
 	 *
-	 * The [Construct.setup static setup] method can be used to
+	 * The [can-construct.setup static setup] method can be used to
 	 * specify inheritable behavior when a Constructor function is created.
 	 *
 	 * @param {Object} instanceProperties Properties that belong to
@@ -383,7 +376,7 @@ assign(Construct, {
 	 *     var pony = new Animal("Gertrude");
 	 *     pony.sayHi(); // "Gertrude says hai!"
 	 *
-	 * The [Construct::init init] and [Construct::setup setup] properties
+	 * The [can-construct::init init] and [can-construct::setup setup] properties
 	 * are used for initialization.
 	 *
 	 * @return {function} The constructor function.
@@ -421,7 +414,7 @@ assign(Construct, {
 	 *
 	 * If you pass all three arguments to Construct, the second one will be attached directy to the
 	 * constructor, allowing you to imitate static properties and functions. You can access these
-	 * properties through the `[Construct::constructor this.constructor]` property.
+	 * properties through the `[can-construct::constructor this.constructor]` property.
 	 *
 	 * Static properties can get overridden through inheritance just like instance properties. In the example below,
 	 * we override both the legs static property as well as the the init function for each instance:
@@ -475,7 +468,7 @@ assign(Construct, {
 		proto = proto || {};
 		var _super_class = this,
 			_super = this.prototype,
-			Constructor, namespace, prototype;
+			Constructor, prototype;
 		// Instantiate a base class (but only create the instance,
 		// don't run the init constructor).
 		prototype = this.instance();
@@ -540,40 +533,21 @@ assign(Construct, {
 		}
 		// Copy new static properties on class.
 		Construct._inherit(klass, _super_class, Constructor);
-		// Setup namespaces.
 
 		// Set things that shouldn't be overwritten.
 		assign(Constructor, {
 			constructor: Constructor,
 			prototype: prototype,
 			/**
-			 * @property {String} Construct.namespace namespace
-			 * @parent can-construct.static
-			 *
-			 * The `namespace` property returns the namespace your constructor is in.
-			 * This provides a way organize code and ensure globally unique types. The
-			 * `namespace` is the [Construct.fullName fullName] you passed without the [Construct.shortName shortName].
-			 *
-			 * ```js
-			 * Construct("MyApplication.MyConstructor",{},{});
-			 * MyApplication.MyConstructor.namespace // "MyApplication"
-			 * MyApplication.MyConstructor.shortName // "MyConstructor"
-			 * MyApplication.MyConstructor.fullName  // "MyApplication.MyConstructor"
-			 * ```
-			 */
-			namespace: namespace,
-			/**
-			 * @property {String} Construct.shortName shortName
+			 * @property {String} can-construct.shortName shortName
 			 * @parent can-construct.static
 			 *
 			 * If you pass a name when creating a Construct, the `shortName` property will be set to the
-			 * name you passed without the [Construct.namespace namespace].
+			 * name.
 			 *
 			 * ```js
-			 * Construct("MyApplication.MyConstructor",{},{});
-			 * MyApplication.MyConstructor.namespace // "MyApplication"
-			 * MyApplication.MyConstructor.shortName // "MyConstructor"
-			 * MyApplication.MyConstructor.fullName  // "MyApplication.MyConstructor"
+			 * var MyConstructor = Construct.extend("MyConstructor",{},{});
+			 * MyConstructor.shortName // "MyConstructor"
 			 * ```
 			 */
 		});
@@ -590,13 +564,11 @@ assign(Construct, {
 			Constructor.init.apply(Constructor, args || t);
 		}
 		/**
-		 * @prototype can-construct.prototype prototype
-		 *
-		 * Properties / functions on the prototype.
+		 * @prototype
 		 */
 		return Constructor; //
 		/**
-		 * @property {Object} Construct.prototype.constructor constructor
+		 * @property {Object} can-construct.prototype.constructor constructor
 		 * @parent can-construct.prototype
 		 *
 		 * A reference to the constructor function that created the instance. This allows you to access
@@ -624,7 +596,7 @@ assign(Construct, {
 	}
 });
 /**
- * @function Construct.prototype.setup setup
+ * @function can-construct.prototype.setup setup
  * @parent can-construct.prototype
  *
  * @signature `construct.setup(...args)`
@@ -634,7 +606,7 @@ assign(Construct, {
  * @param {*} args The arguments passed to the constructor.
  *
  * @return {Array|undefined} If an array is returned, the array's items are passed as
- * arguments to [Construct::init init]. The following example always makes
+ * arguments to [can-construct::init init]. The following example always makes
  * sure that init is called with a jQuery wrapped element:
  *
  *     WidgetFactory = Construct.extend({
@@ -650,14 +622,14 @@ assign(Construct, {
  *     })
  *
  * Otherwise, the arguments to the
- * constructor are passed to [Construct::init] and the return value of `setup` is discarded.
+ * constructor are passed to [can-construct::init] and the return value of `setup` is discarded.
  *
  * @body
  *
  * ## Deciding between `setup` and `init`
  *
  *
- * Usually, you should use [Construct::init init] to do your constructor function's initialization.
+ * Usually, you should use [can-construct::init init] to do your constructor function's initialization.
  * You should, instead, use `setup` when:
  *
  *   - there is initialization code that you want to run before the inheriting constructor's
@@ -692,17 +664,17 @@ assign(Construct, {
  */
 Construct.prototype.setup = function () {};
 /**
- * @function Construct.prototype.init init
+ * @function can-construct.prototype.init init
  * @parent can-construct.prototype
  *
  * @description Called when a new instance of a Construct is created.
  *
  * @signature `construct.init(...args)`
- * @param {*} args the arguments passed to the constructor (or the items of the array returned from [Construct::setup])
+ * @param {*} args the arguments passed to the constructor (or the items of the array returned from [can-construct::setup])
  *
  * @body
  * If a prototype `init` method is provided, `init` is called when a new Construct is created---
- * after [Construct::setup]. The `init` method is where the bulk of your initialization code
+ * after [can-construct::setup]. The `init` method is where the bulk of your initialization code
  * should go. A common thing to do in `init` is save the arguments passed into the constructor.
  *
  * ## Examples
@@ -745,7 +717,7 @@ Construct.prototype.setup = function () {};
  *
  * ## Modified Arguments
  *
- * [Construct::setup] is able to modify the arguments passed to `init`.
+ * [can-construct::setup] is able to modify the arguments passed to `init`.
  * If you aren't receiving the arguments you passed to `new Construct(args)`,
  * check that they aren't being changed by `setup` along
  * the inheritance chain.
