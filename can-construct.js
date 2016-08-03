@@ -169,22 +169,22 @@ assign(Construct, {
 	 *
 	 * // override Person's newInstance function
 	 * Person.newInstance = function() {
-	 * // if cache does not exist make it an new object
-	 * this.__cache = this.__cache || {};
-	 * // id is a stingified version of the passed arguments
-	 * var id = JSON.stringify(arguments);
+	 *   // if cache does not exist make it an new object
+	 *   this.__cache = this.__cache || {};
+	 *   // id is a stingified version of the passed arguments
+	 *   var id = JSON.stringify(arguments);
 	 *
-	 * // look in the cache to see if the object already exists
-	 * var cachedInst = this.__cache[id];
-	 * if(cachedInst) {
+	 *   // look in the cache to see if the object already exists
+	 *   var cachedInst = this.__cache[id];
+	 *   if(cachedInst) {
 	 *     return cachedInst;
-	 * }
+	 *   }
 	 *
-	 * //otherwise call the original newInstance function and return a new instance of Person.
-	 * var newInst = _newInstance.apply(this, arguments);
-	 * this.__cache[id] = newInst;
-	 * return newInst;
-	 * }
+	 *   //otherwise call the original newInstance function and return a new instance of Person.
+	 *   var newInst = _newInstance.apply(this, arguments);
+	 *   this.__cache[id] = newInst;
+	 *   return newInst;
+	 * };
 	 *
 	 * // create two instances with the same arguments
 	 * var justin = new Person('Justin', 'Barry', 'Meyer'),
@@ -609,17 +609,19 @@ assign(Construct, {
  * arguments to [can-construct::init init]. The following example always makes
  * sure that init is called with a jQuery wrapped element:
  *
- *     WidgetFactory = Construct.extend({
- *         setup: function(element){
- *             return [$(element)]
- *         }
- *     })
- *
- *     MyWidget = WidgetFactory.extend({
- *         init: function($el){
- *             $el.html("My Widget!!")
- *         }
- *     })
+ * ```js
+ * 	WidgetFactory = Construct.extend({
+ * 			setup: function(element){
+ * 					return [$(element)]
+ * 			}
+ * 	});
+ * 
+ * 	MyWidget = WidgetFactory.extend({
+ * 			init: function($el){
+ * 					$el.html("My Widget!!")
+ * 			}
+ * 	});
+ *  ```
  *
  * Otherwise, the arguments to the
  * constructor are passed to [can-construct::init] and the return value of `setup` is discarded.
@@ -637,29 +639,6 @@ assign(Construct, {
  *   - there is initialization code that should run whether or not inheriting constructors
  *     call their base's `init` methods.
  *   - you want to modify the arguments that will get passed to `init`.
- *
- * ## Example
- *
- * This code is a simplified version of the code in [can.Control]'s setup
- * method. It converts the first argument to a jQuery collection and
- * extends the controller's defaults with the options that were passed.
- *
- *
- *     can.Control = Construct.extend({
- *         setup: function(domElement, rawOptions) {
- *             // set up this.element
- *             this.element = $(domElement);
- *
- *             // set up this.options
- *             this.options = can.extend({},
- *                                   this.constructor.defaults,
- *                                   rawOptions
- *                                  );
- *
- *             // pass this.element and this.options to init.
- *             return [this.element, this.options];
- *         }
- *     });
  *
  */
 Construct.prototype.setup = function () {};
