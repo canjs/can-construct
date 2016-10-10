@@ -42,7 +42,7 @@ animal.sayHi();
 
       Construct.extend("ConstructorName",{})
 
-  returns a constructur function that will show up as `ConstructorName`
+  returns a constructor function that will show up as `ConstructorName`
   in the developer tools.
   It also sets "ConstructorName" as [shortName](#shortname-string).
 
