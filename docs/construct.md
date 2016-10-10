@@ -1,5 +1,5 @@
 @module {function} can-construct can-construct
-@parent can-core
+@parent can-infrastructure
 @package ../package.json
 
 @description
@@ -13,7 +13,7 @@ constructor function of your own.
 
 ## Use
 
-THIS IS ITIn the example below, `Animal` is a constructor function returned by [can-construct.extend can-construct.extend]. All instances of `Animal` will have a `speak`
+In the example below, `Animal` is a constructor function returned by [can-construct.extend can-construct.extend]. All instances of `Animal` will have a `speak`
 method, and the `Animal` constructor has a `legs` property.
 
 
