@@ -19,6 +19,26 @@ Extends Construct, or constructor functions derived from Construct, to create a 
 These properties are added to the constructor's `prototype` object.
 @return {function} The constructor function.
 
+@signature `new Construct( ...args )`
+
+Creates a new instance using Construct's constructor functions.
+
+@param {*} [args] The arguments passed to the constructor.
+@return {Object} The instantiated object.
+
+@signature `construct.setup( ...args )`
+
+A [can-construct::setup setup] function for the instantiation of a constructor function.
+
+@param {*} [args] The arguments passed to the constructor.
+@return {Array|undefined} If an array is returned, the array's items are passed as arguments to [can-construct::init init].
+
+@signature `construct.init( ...args )`
+
+An [can-construct::init init] function that gets called with each new instance.
+
+@param {*} [args] The arguments passed to the constructor (or the items of the array returned from [can-construct::setup setup]).
+
 @body
 
 ## Use
@@ -38,8 +58,6 @@ method, and the `Animal` constructor has a `legs` property.
             console.log(this.sound);
         }
     });
-
-You can supply a [can-construct::setup setup] method and/or a [can-construct::init init] method when extending `can-construct`.
 
 You can make instances of your object by calling your constructor function with the `new` keyword. When an object is created, the [can-construct::init init]
 method gets called (if you supplied one):
