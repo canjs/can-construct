@@ -159,3 +159,31 @@ test("setup called with original arguments", function(){
 
 	Construct.extend(o1, o2);
 });
+
+test("legacy namespace strings (A.B.C) accepted", function() {
+
+	var Type = Construct.extend("Foo.Bar.Baz");
+
+	ok(new Type() instanceof Construct, "No unexpected behavior in the prototype chain")
+	equal(Type.name, "Foo_Bar_Baz", "Name becomes underscored");
+});
+
+test("basic injection attacks thwarted", function() {
+	// check for injection
+	var expando = "foo" + Math.random().toString(10).slice(2);
+	var MalignantType;
+	try {
+		MalignantType = Construct.extend("(){};self." + expando + "='bar';var f=function");
+	} catch(e) { // ok if it fails
+	} finally {
+		equal(self[expando], undefined, "Injected code doesn't run");
+	}
+	delete self[expando];
+	try {
+		MalignantType = Construct.extend("(){},self." + expando + "='baz',function");
+	} catch(e) {
+	} finally {
+		equal(self[expando], undefined, "Injected code doesn't run");
+	}
+
+})

@@ -489,7 +489,7 @@ assign(Construct, {
 		// this at all so we hide it
 
 		// Strip semicolons
-		var constructorName = shortName ? shortName.replace(/;/g, '') : 'Constructor';
+		var constructorName = shortName ? shortName.replace(/[^A-Z0-9_]/ig, '_') : 'Constructor';
 
 		// Assign a name to the constructor
 		eval('Constructor = function ' + constructorName + '() { return init.apply(this, arguments); }');
