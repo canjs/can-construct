@@ -5,17 +5,8 @@ var dev = require("can-util/js/dev/dev");
 var makeArray = require("can-util/js/make-array/make-array");
 var types = require('can-util/js/types/types');
 var namespace = require('can-util/namespace');
+/* jshint ignore: start */
 var CanString = require('can-util/js/string/string');
-
-// ## construct.js
-// `Construct`
-// _This is a modified version of
-// [John Resig's class](http://ejohn.org/blog/simple-javascript-inheritance/).
-// It provides class level inheritance and callbacks._
-// A private flag used to initialize a new class instance without
-// initializing it's bindings.
-var initializing = 0;
-
 var reservedWords = [
 	"abstract",  	"else",  	"instanceof",  	"super",  
 	"boolean",  	"enum",  	"int",  	"switch",  
@@ -33,6 +24,18 @@ var reservedWords = [
 	"do",  	"import",  	"short",  	"while",  
 	"double",  	"in",  	"static",  	"with"
 ];
+/* jshint ignore: end */
+
+
+// ## construct.js
+// `Construct`
+// _This is a modified version of
+// [John Resig's class](http://ejohn.org/blog/simple-javascript-inheritance/).
+// It provides class level inheritance and callbacks._
+// A private flag used to initialize a new class instance without
+// initializing it's bindings.
+var initializing = 0;
+
 
 
 /**
