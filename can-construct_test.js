@@ -168,6 +168,15 @@ test("legacy namespace strings (A.B.C) accepted", function() {
 	equal(Type.name, "Foo_Bar_Baz", "Name becomes underscored");
 });
 
+test("reserved words accepted", function() {
+
+	var Type = Construct.extend("const");
+
+	ok(new Type() instanceof Construct, "No unexpected behavior in the prototype chain")
+	equal(Type.name, "Const", "Name becomes capitalized");
+});
+
+
 test("basic injection attacks thwarted", function() {
 	// check for injection
 	var expando = "foo" + Math.random().toString(10).slice(2);

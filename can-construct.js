@@ -5,6 +5,7 @@ var dev = require("can-util/js/dev/dev");
 var makeArray = require("can-util/js/make-array/make-array");
 var types = require('can-util/js/types/types');
 var namespace = require('can-util/namespace');
+var CanString = require('can-util/js/string/string');
 
 // ## construct.js
 // `Construct`
@@ -14,6 +15,26 @@ var namespace = require('can-util/namespace');
 // A private flag used to initialize a new class instance without
 // initializing it's bindings.
 var initializing = 0;
+
+var reservedWords = [
+	"abstract",  	"else",  	"instanceof",  	"super",  
+	"boolean",  	"enum",  	"int",  	"switch",  
+	"break",  	"export",  	"interface",  	"synchronized",  
+	"byte",  	"extends",  	"let",  	"this",  
+	"case",  	"false",  	"long",  	"throw",  
+	"catch",  	"final",  	"native",  	"throws",  
+	"char",  	"finally",  	"new",  	"transient",  
+	"class",  	"float",  	"null",  	"true",  
+	"const",  	"for",  	"package",  	"try",  
+	"continue",  	"function",  	"private",  	"typeof",  
+	"debugger",  	"goto",  	"protected",  	"var",  
+	"default",  	"if",  	"public",  	"void",  
+	"delete",  	"implements",  	"return",  	"volatile",  
+	"do",  	"import",  	"short",  	"while",  
+	"double",  	"in",  	"static",  	"with"
+];
+
+
 /**
  * @add can-construct
  */
@@ -490,6 +511,9 @@ assign(Construct, {
 
 		// Strip semicolons
 		var constructorName = shortName ? shortName.replace(/[^A-Z0-9_]/ig, '_') : 'Constructor';
+		if(reservedWords.indexOf(constructorName) > -1) {
+			constructorName = CanString.capitalize(constructorName);
+		}
 
 		// Assign a name to the constructor
 		eval('Constructor = function ' + constructorName + '() { return init.apply(this, arguments); }');
