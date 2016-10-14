@@ -5,27 +5,73 @@ var dev = require("can-util/js/dev/dev");
 var makeArray = require("can-util/js/make-array/make-array");
 var types = require('can-util/js/types/types');
 var namespace = require('can-util/namespace');
+//!steal-remove-start
 /* jshint ignore: start */
 var CanString = require('can-util/js/string/string');
-var reservedWords = [
-	"abstract",  	"else",  	"instanceof",  	"super",  
-	"boolean",  	"enum",  	"int",  	"switch",  
-	"break",  	"export",  	"interface",  	"synchronized",  
-	"byte",  	"extends",  	"let",  	"this",  
-	"case",  	"false",  	"long",  	"throw",  
-	"catch",  	"final",  	"native",  	"throws",  
-	"char",  	"finally",  	"new",  	"transient",  
-	"class",  	"float",  	"null",  	"true",  
-	"const",  	"for",  	"package",  	"try",  
-	"continue",  	"function",  	"private",  	"typeof",  
-	"debugger",  	"goto",  	"protected",  	"var",  
-	"default",  	"if",  	"public",  	"void",  
-	"delete",  	"implements",  	"return",  	"volatile",  
-	"do",  	"import",  	"short",  	"while",  
-	"double",  	"in",  	"static",  	"with"
-];
+var reservedWords = {
+	"abstract": true,
+	"boolean": true,
+	"break": true,
+	"byte": true,
+	"case": true,
+	"catch": true,
+	"char": true,
+	"class": true,
+	"const": true,
+	"continue": true,
+	"debugger": true,
+	"default": true,
+	"delete": true,
+	"do": true,
+	"double": true,
+	"else": true,
+	"enum": true,
+	"export": true,
+	"extends": true,
+	"false": true,
+	"final": true,
+	"finally": true,
+	"float": true,
+	"for": true,
+	"function": true,
+	"goto": true,
+	"if": true,
+	"implements": true,
+	"import": true,
+	"in": true,
+	"instanceof": true,
+	"int": true,
+	"interface": true,
+	"let": true,
+	"long": true,
+	"native": true,
+	"new": true,
+	"null": true,
+	"package": true,
+	"private": true,
+	"protected": true,
+	"public": true,
+	"return": true,
+	"short": true,
+	"static": true,
+	"super": true,
+	"switch": true,
+	"synchronized": true,
+	"this": true,
+	"throw": true,
+	"throws": true,
+	"transient": true,
+	"true": true,
+	"try": true,
+	"typeof": true,
+	"var": true,
+	"void": true,
+	"volatile": true,
+	"while": true,
+	"with": true
+};
 /* jshint ignore: end */
-
+//!steal-remove-end
 
 // ## construct.js
 // `Construct`
@@ -514,7 +560,7 @@ assign(Construct, {
 
 		// Strip semicolons
 		var constructorName = shortName ? shortName.replace(/[^A-Z0-9_]/ig, '_') : 'Constructor';
-		if(reservedWords.indexOf(constructorName) > -1) {
+		if(reservedWords[constructorName]) {
 			constructorName = CanString.capitalize(constructorName);
 		}
 
