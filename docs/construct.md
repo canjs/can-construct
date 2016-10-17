@@ -66,7 +66,7 @@ var Animal = Construct.extend({
 });
 ```
 
-For more information on deciding when to use [can-construct::setup setup] or [can-construct::init init] 
+For more information on deciding when to use [can-construct::setup setup] or [can-construct::init init]
 see the bottom of the [can-construct::setup setup] documentation.
 
 You can make instances of your object by calling your constructor function with the `new` keyword. When an object is created, the [can-construct::init init]
@@ -80,7 +80,6 @@ panther instanceof Animal; // true
 
 ## Plugins
 
-There are two plugins available to help make using `can-construct` even simpler.
+There are plugins available to help make using `can-construct` even simpler.
 
 -   [can-construct-super] allows you to easily call base methods by making `this._super` available in inherited methods.
--   [can-construct-proxy] creates a static callback function that sets the value of `this` to an instance of the constructor function.
