@@ -5,8 +5,6 @@ var dev = require("can-util/js/dev/dev");
 var makeArray = require("can-util/js/make-array/make-array");
 var types = require('can-util/js/types/types');
 var namespace = require('can-util/namespace');
-//!steal-remove-start
-/* jshint ignore: start */
 var CanString = require('can-util/js/string/string');
 var reservedWords = {
 	"abstract": true,
@@ -70,8 +68,7 @@ var reservedWords = {
 	"while": true,
 	"with": true
 };
-/* jshint ignore: end */
-//!steal-remove-end
+var constructorNameRegex = /[^A-Z0-9_]/gi;
 
 // ## construct.js
 // `Construct`
@@ -82,7 +79,13 @@ var reservedWords = {
 // initializing it's bindings.
 var initializing = 0;
 
-
+var namedCtor = (function(cache){
+	return function(name, fn) {
+		return ((name in cache) ? cache[name] : cache[name] = new Function(
+			"__", "function "+name+"(){return __.apply(this,arguments)};return "+name
+		))( fn );
+	}
+}({}));
 
 /**
  * @add can-construct
@@ -552,22 +555,15 @@ assign(Construct, {
 		} else if(this.shortName) {
 			shortName = this.shortName;
 		}
-		//!steal-remove-start
-		/* jshint ignore:start */
-		// In dev builds we want constructor.name to be the same as shortName.
-		// The only way to do that right now is using eval. jshint does not like
-		// this at all so we hide it
+		// We want constructor.name to be the same as shortName, within
+		// the bounds of what the JS VM will allow (meaning no non-word characters).
+		// new Function() is significantly faster than eval() here.
 
 		// Strip semicolons
-		var constructorName = shortName ? shortName.replace(/[^A-Z0-9_]/ig, '_') : 'Constructor';
+		var constructorName = shortName ? shortName.replace(constructorNameRegex, '_') : 'Constructor';
 		if(reservedWords[constructorName]) {
 			constructorName = CanString.capitalize(constructorName);
 		}
-
-		// Assign a name to the constructor
-		eval('Constructor = function ' + constructorName + '() { return init.apply(this, arguments); }');
-		/* jshint ignore:end */
-		//!steal-remove-end
 
 		// The dummy class constructor.
 		function init() {
@@ -589,14 +585,7 @@ assign(Construct, {
 				Constructor.newInstance.apply(Constructor, arguments);
 			}
 		}
-
-		// Make sure Constructor is still defined when the constructor name
-		// code is removed.
-		if(typeof constructorName === 'undefined') {
-			Constructor = function() {
-				return init.apply(this, arguments);
-			};
-		}
+		Constructor = namedCtor( constructorName, init );
 
 		// Copy old stuff onto class (can probably be merged w/ inherit)
 		for (var propName in _super_class) {
@@ -610,7 +599,7 @@ assign(Construct, {
 		// Set things that shouldn't be overwritten.
 		assign(Constructor, {
 			constructor: Constructor,
-			prototype: prototype,
+			prototype: prototype
 			/**
 			 * @property {String} can-construct.shortName shortName
 			 * @parent can-construct.static
