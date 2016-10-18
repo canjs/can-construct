@@ -84,7 +84,7 @@ var namedCtor = (function(cache){
 		return ((name in cache) ? cache[name] : cache[name] = new Function(
 			"__", "function "+name+"(){return __.apply(this,arguments)};return "+name
 		))( fn );
-	}
+	};
 }({}));
 
 /**
