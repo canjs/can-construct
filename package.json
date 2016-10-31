@@ -46,7 +46,7 @@
     "npmAlgorithm": "flat"
   },
   "dependencies": {
-    "can-util": "^3.0.1"
+    "can-util": "^3.0.4"
   },
   "devDependencies": {
     "bit-docs": "0.0.7",
