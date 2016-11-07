@@ -5,6 +5,7 @@ var dev = require("can-util/js/dev/dev");
 var makeArray = require("can-util/js/make-array/make-array");
 var types = require('can-util/js/types/types');
 var namespace = require('can-util/namespace');
+//!steal-remove-start
 var CanString = require('can-util/js/string/string');
 var reservedWords = {
 	"abstract": true,
@@ -69,6 +70,7 @@ var reservedWords = {
 	"with": true
 };
 var constructorNameRegex = /[^A-Z0-9_]/gi;
+//!steal-remove-end
 
 // ## construct.js
 // `Construct`
@@ -79,6 +81,7 @@ var constructorNameRegex = /[^A-Z0-9_]/gi;
 // initializing it's bindings.
 var initializing = 0;
 
+//!steal-remove-start
 var namedCtor = (function(cache){
 	return function(name, fn) {
 		return ((name in cache) ? cache[name] : cache[name] = new Function(
@@ -86,6 +89,7 @@ var namedCtor = (function(cache){
 		))( fn );
 	};
 }({}));
+//!steal-remove-end
 
 /**
  * @add can-construct
@@ -560,10 +564,12 @@ assign(Construct, {
 		// new Function() is significantly faster than eval() here.
 
 		// Strip semicolons
+		//!steal-remove-start
 		var constructorName = shortName ? shortName.replace(constructorNameRegex, '_') : 'Constructor';
 		if(reservedWords[constructorName]) {
 			constructorName = CanString.capitalize(constructorName);
 		}
+		//!steal-remove-end
 
 		// The dummy class constructor.
 		function init() {
@@ -585,7 +591,9 @@ assign(Construct, {
 				Constructor.newInstance.apply(Constructor, arguments);
 			}
 		}
-		Constructor = namedCtor( constructorName, init );
+		Constructor = typeof namedCtor === "function" ?
+			namedCtor( constructorName, init ) :
+			function() { return init.apply(this, arguments); };
 
 		// Copy old stuff onto class (can probably be merged w/ inherit)
 		for (var propName in _super_class) {
