@@ -159,3 +159,46 @@ test("setup called with original arguments", function(){
 
 	Construct.extend(o1, o2);
 });
+
+test("legacy namespace strings (A.B.C) accepted", function() {
+
+	var Type = Construct.extend("Foo.Bar.Baz");
+	var expectedValue = ~steal.config("env").indexOf("production") ? "" : "Foo_Bar_Baz";
+
+	ok(new Type() instanceof Construct, "No unexpected behavior in the prototype chain");
+	equal(Type.name, expectedValue, "Name becomes underscored");
+});
+
+test("reserved words accepted", function() {
+
+	var Type = Construct.extend("const");
+	var expectedValue = ~steal.config("env").indexOf("production") ? "" : "Const";
+
+	ok(new Type() instanceof Construct, "No unexpected behavior in the prototype chain");
+	equal(Type.name, expectedValue, "Name becomes capitalized");
+});
+
+
+test("basic injection attacks thwarted", function() {
+
+	var rootToken = typeof window === "undefined" ? "global" : "window";
+	var rootObject = typeof window === "undefined" ? global : window;
+
+	// check for injection
+	var expando = "foo" + Math.random().toString(10).slice(2);
+	var MalignantType;
+	try {
+		MalignantType = Construct.extend("(){};" + rootToken + "." + expando + "='bar';var f=function");
+	} catch(e) { // ok if it fails
+	} finally {
+		equal(rootObject[expando], undefined, "Injected code doesn't run");
+	}
+	delete rootObject[expando];
+	try {
+		MalignantType = Construct.extend("(){}," + rootToken + "." + expando + "='baz',function");
+	} catch(e) {
+	} finally {
+		equal(rootObject[expando], undefined, "Injected code doesn't run");
+	}
+
+});

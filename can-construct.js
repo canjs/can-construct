@@ -5,6 +5,72 @@ var dev = require("can-util/js/dev/dev");
 var makeArray = require("can-util/js/make-array/make-array");
 var types = require('can-util/js/types/types');
 var namespace = require('can-util/namespace');
+//!steal-remove-start
+var CanString = require('can-util/js/string/string');
+var reservedWords = {
+	"abstract": true,
+	"boolean": true,
+	"break": true,
+	"byte": true,
+	"case": true,
+	"catch": true,
+	"char": true,
+	"class": true,
+	"const": true,
+	"continue": true,
+	"debugger": true,
+	"default": true,
+	"delete": true,
+	"do": true,
+	"double": true,
+	"else": true,
+	"enum": true,
+	"export": true,
+	"extends": true,
+	"false": true,
+	"final": true,
+	"finally": true,
+	"float": true,
+	"for": true,
+	"function": true,
+	"goto": true,
+	"if": true,
+	"implements": true,
+	"import": true,
+	"in": true,
+	"instanceof": true,
+	"int": true,
+	"interface": true,
+	"let": true,
+	"long": true,
+	"native": true,
+	"new": true,
+	"null": true,
+	"package": true,
+	"private": true,
+	"protected": true,
+	"public": true,
+	"return": true,
+	"short": true,
+	"static": true,
+	"super": true,
+	"switch": true,
+	"synchronized": true,
+	"this": true,
+	"throw": true,
+	"throws": true,
+	"transient": true,
+	"true": true,
+	"try": true,
+	"typeof": true,
+	"var": true,
+	"void": true,
+	"volatile": true,
+	"while": true,
+	"with": true
+};
+var constructorNameRegex = /[^A-Z0-9_]/gi;
+//!steal-remove-end
 
 // ## construct.js
 // `Construct`
@@ -14,6 +80,17 @@ var namespace = require('can-util/namespace');
 // A private flag used to initialize a new class instance without
 // initializing it's bindings.
 var initializing = 0;
+
+//!steal-remove-start
+var namedCtor = (function(cache){
+	return function(name, fn) {
+		return ((name in cache) ? cache[name] : cache[name] = new Function(
+			"__", "function "+name+"(){return __.apply(this,arguments)};return "+name
+		))( fn );
+	};
+}({}));
+//!steal-remove-end
+
 /**
  * @add can-construct
  */
@@ -482,18 +559,16 @@ assign(Construct, {
 		} else if(this.shortName) {
 			shortName = this.shortName;
 		}
-		//!steal-remove-start
-		/* jshint ignore:start */
-		// In dev builds we want constructor.name to be the same as shortName.
-		// The only way to do that right now is using eval. jshint does not like
-		// this at all so we hide it
+		// We want constructor.name to be the same as shortName, within
+		// the bounds of what the JS VM will allow (meaning no non-word characters).
+		// new Function() is significantly faster than eval() here.
 
 		// Strip semicolons
-		var constructorName = shortName ? shortName.replace(/;/g, '') : 'Constructor';
-
-		// Assign a name to the constructor
-		eval('Constructor = function ' + constructorName + '() { return init.apply(this, arguments); }');
-		/* jshint ignore:end */
+		//!steal-remove-start
+		var constructorName = shortName ? shortName.replace(constructorNameRegex, '_') : 'Constructor';
+		if(reservedWords[constructorName]) {
+			constructorName = CanString.capitalize(constructorName);
+		}
 		//!steal-remove-end
 
 		// The dummy class constructor.
@@ -516,14 +591,9 @@ assign(Construct, {
 				Constructor.newInstance.apply(Constructor, arguments);
 			}
 		}
-
-		// Make sure Constructor is still defined when the constructor name
-		// code is removed.
-		if(typeof constructorName === 'undefined') {
-			Constructor = function() {
-				return init.apply(this, arguments);
-			};
-		}
+		Constructor = typeof namedCtor === "function" ?
+			namedCtor( constructorName, init ) :
+			function() { return init.apply(this, arguments); };
 
 		// Copy old stuff onto class (can probably be merged w/ inherit)
 		for (var propName in _super_class) {
@@ -537,7 +607,7 @@ assign(Construct, {
 		// Set things that shouldn't be overwritten.
 		assign(Constructor, {
 			constructor: Constructor,
-			prototype: prototype,
+			prototype: prototype
 			/**
 			 * @property {String} can-construct.shortName shortName
 			 * @parent can-construct.static
