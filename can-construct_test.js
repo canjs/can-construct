@@ -166,7 +166,9 @@ test("legacy namespace strings (A.B.C) accepted", function() {
 	var expectedValue = ~steal.config("env").indexOf("production") ? "" : "Foo_Bar_Baz";
 
 	ok(new Type() instanceof Construct, "No unexpected behavior in the prototype chain");
-	equal(Type.name, expectedValue, "Name becomes underscored");
+	if (Function.prototype.name) {
+		equal(Type.name, expectedValue, "Name becomes underscored");
+	}
 });
 
 test("reserved words accepted", function() {
@@ -175,7 +177,9 @@ test("reserved words accepted", function() {
 	var expectedValue = ~steal.config("env").indexOf("production") ? "" : "Const";
 
 	ok(new Type() instanceof Construct, "No unexpected behavior in the prototype chain");
-	equal(Type.name, expectedValue, "Name becomes capitalized");
+	if (Function.prototype.name) {
+		equal(Type.name, expectedValue, "Name becomes capitalized");
+	}
 });
 
 
