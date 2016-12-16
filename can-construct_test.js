@@ -206,3 +206,22 @@ test("basic injection attacks thwarted", function() {
 	}
 
 });
+
+QUnit.test("setters not invoked on extension (#28)", function(){
+
+	var extending = true;
+	var Base = Construct.extend("Base",{
+		set something(value){
+			QUnit.ok(!extending, "called when not extending");
+		},
+		get something(){
+
+		}
+	});
+
+	Base.extend("Extended",{
+		something: "value"
+	});
+	extending = false;
+	new Base().something = "foo";
+});
