@@ -309,7 +309,7 @@ assign(Construct, {
 	// this should be used for patching other objects
 	// the super plugin overwrites this
 	_overwrite: function (what, oldProps, propName, val) {
-		what[propName] = val;
+		Object.defineProperty(what, propName, {value: val, configurable: true, enumerable: true, writable: true});
 	},
 	// Set `defaults` as the merger of the parent `defaults` and this
 	// object's `defaults`. If you overwrite this method, make sure to
@@ -685,7 +685,7 @@ assign(Construct, {
  * 					return [$(element)]
  * 			}
  * 	});
- * 
+ *
  * 	MyWidget = WidgetFactory.extend({
  * 			init: function($el){
  * 					$el.html("My Widget!!")
