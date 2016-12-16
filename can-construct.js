@@ -3,8 +3,8 @@ var assign = require("can-util/js/assign/assign");
 var deepAssign = require("can-util/js/deep-assign/deep-assign");
 var dev = require("can-util/js/dev/dev");
 var makeArray = require("can-util/js/make-array/make-array");
-var types = require('can-util/js/types/types');
-var namespace = require('can-util/namespace');
+var types = require('can-types');
+var namespace = require('can-namespace');
 //!steal-remove-start
 var CanString = require('can-util/js/string/string');
 var reservedWords = {
