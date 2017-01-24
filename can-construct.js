@@ -663,6 +663,9 @@ assign(Construct, {
 		 * console.log(Counter.count); // 1
 		 * ```
 		 */
+	},
+	ReturnValue: function(cb){
+		this.initCb = cb;
 	}
 });
 /**
