@@ -284,6 +284,9 @@ assign(Construct, {
 				writable: true
 			});
 			args = inst.setup.apply(inst, arguments);
+			if (args instanceof Construct.ReturnValue){
+				return args.initCb.apply(null, args.args);
+			}
 			inst.__inSetup = false;
 		}
 		// Call `init` if there is an `init`
@@ -664,8 +667,9 @@ assign(Construct, {
 		 * ```
 		 */
 	},
-	ReturnValue: function(cb){
+	ReturnValue: function(cb, args){
 		this.initCb = cb;
+		this.args = args;
 	}
 });
 /**

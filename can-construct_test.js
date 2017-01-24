@@ -235,7 +235,7 @@ QUnit.test("return alternative value simple", function(){
 			});
 		}
 	});
-	QUnit.test.ok(new Base() instanceof Alternative, "Should create an instance of Alternative");
+	QUnit.ok(new Base() instanceof Alternative, "Should create an instance of Alternative");
 });
 
 QUnit.test("return alternative value on setup (full case)", function(){
@@ -245,17 +245,17 @@ QUnit.test("return alternative value on setup (full case)", function(){
 		this.isStudent = true;
 	};
 	var Person = Construct.extend({
-		setup: function(opt){
+		setup: function(opts){
 			console.log('[Person.setup]');
-			if (opt.age >= 16){
+			if (opts.age >= 16){
 				console.log('[Person.setup] >= 16');
 				return new Construct.ReturnValue(function(params){
 					return new Student(params.name, params.school);
-				});
+				}, [opts]);
 			}
 			console.log('[Person.setup] < 16');
-			opt.isStudent = false;
-			return [opt];
+			opts.isStudent = false;
+			return [opts];
 		},
 		init: function(params){
 			this.age = params.age;
