@@ -529,6 +529,49 @@ assign(Construct, {
 	 * dog.speak(); // 'woof'
 	 * blackMamba.speak(); // 'ssssss'
 	 * ```
+	 * 
+	 * ## Alternative value for a new instance
+	 * 
+	 * Sometimes you may want to return some custom value instead of a new object when creating an instance of your class.
+	 * For example, you want your class to act as a singleton, or check whether an item with the given id was already
+	 * created and return an existing one from your cache store (e.g. using [can-connect/constructor/store/store]).
+	 * 
+	 * To achieve this you can return [can-construct.ReturnValue] from `setup` method of your class.
+	 * 
+	 * Lets say you have `myStore` to cache all newly created instances. And if an item already exists you want to merge
+	 * the new data into the existing instance and return the updated instance.
+	 * 
+	 * ```
+	 * const myStore = {};
+	 * 
+	 * const Item = Construct.extend({
+	 *     setup: function(params){
+	 *         if (myStore[params.id]){
+	 *             var item = myStore[params.id];
+	 *             
+	 *             // Merge new data to the existing instance:
+	 *             Object.keys( params ).forEach(function( key ){
+	 *                 item[key] = params[key];
+	 *             });
+	 *             
+	 *             // Return the updated item:
+	 *             return new Construct.ReturnValue( item );
+	 *         } else {
+	 *             return [params];
+	 *         }
+	 *     },
+	 *     init: function(params){
+	 *         this.id = params.id;
+	 *         this.name = params.name;
+	 *         
+	 *         // Save to cache store:
+	 *         myStore[this.id] = this;
+	 *     }
+	 * });
+	 * 
+	 * const item_1  = new Item( {id: 1, name: "One"} );
+	 * const item_1a = new Item( {id: 1, name: "OnePlus"} )
+	 * ```
 	 */
 	extend: function (name, staticProperties, instanceProperties) {
 		var shortName = name,
@@ -667,6 +710,37 @@ assign(Construct, {
 		 * ```
 		 */
 	},
+	/**
+	 * @function can-construct.ReturnValue ReturnValue
+	 * @parent can-construct.static
+	 * 
+	 * A constructor function which `value` property will be used as a value for a new instance. 
+	 * 
+	 * @signature `new Construct.ReturnValue( value )`
+	 * 
+	 * 	@param {*} value A value to be used for a new instance instead of a new object.
+	 * 
+	 * ```
+	 * const Student = function( name, school ){
+	 *     this.name = name;
+	 *     this.school = school;
+	 * } 
+	 * 
+	 * const Person = Construct.extend({
+	 *     setup: function( options ){
+	 *         if (options.school){
+	 *             return new Constructor.ReturnValue( new Student( options.name, options.school ) );
+	 *         } else {
+	 *             return [options];
+	 *         }
+	 *     }
+	 * });
+	 * 
+	 * const myPerson = new Person( {name: "Peter", school: "UFT"} );
+	 * 
+	 * myPerson instanceof Student // => true
+	 * ```
+   */
 	ReturnValue: function(value){
 		this.value = value;
 	}
@@ -681,8 +755,9 @@ assign(Construct, {
  *
  * @param {*} args The arguments passed to the constructor.
  *
- * @return {Array|undefined} If an array is returned, the array's items are passed as
- * arguments to [can-construct::init init]. The following example always makes
+ * @return {Array|undefined|can-construct.ReturnValue} If an array is returned, the array's items are passed as
+ * arguments to [can-construct::init init]. If [can-construct.ReturnValue] is returned then the value that passed to it
+ * will be used as a value for a new instance. The following example always makes
  * sure that init is called with a jQuery wrapped element:
  *
  * ```js
