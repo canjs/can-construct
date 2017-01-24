@@ -230,9 +230,7 @@ QUnit.test("return alternative value simple", function(){
 	var Alternative = function(){};
 	var Base = Construct.extend({
 		setup: function(){
-			return new Construct.ReturnValue(function(){
-				return new Alternative();
-			});
+			return new Construct.ReturnValue( new Alternative() );
 		}
 	});
 	QUnit.ok(new Base() instanceof Alternative, "Should create an instance of Alternative");
@@ -246,14 +244,9 @@ QUnit.test("return alternative value on setup (full case)", function(){
 	};
 	var Person = Construct.extend({
 		setup: function(opts){
-			console.log('[Person.setup]');
 			if (opts.age >= 16){
-				console.log('[Person.setup] >= 16');
-				return new Construct.ReturnValue(function(params){
-					return new Student(params.name, params.school);
-				}, [opts]);
+				return new Construct.ReturnValue( new Student(opts.name, opts.school) );
 			}
-			console.log('[Person.setup] < 16');
 			opts.isStudent = false;
 			return [opts];
 		},

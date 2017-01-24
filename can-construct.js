@@ -285,7 +285,7 @@ assign(Construct, {
 			});
 			args = inst.setup.apply(inst, arguments);
 			if (args instanceof Construct.ReturnValue){
-				return args.initCb.apply(null, args.args);
+				return args.value;
 			}
 			inst.__inSetup = false;
 		}
@@ -667,9 +667,8 @@ assign(Construct, {
 		 * ```
 		 */
 	},
-	ReturnValue: function(cb, args){
-		this.initCb = cb;
-		this.args = args;
+	ReturnValue: function(value){
+		this.value = value;
 	}
 });
 /**
