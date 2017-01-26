@@ -542,35 +542,32 @@ assign(Construct, {
 	 * the new data into the existing instance and return the updated instance.
 	 * 
 	 * ```
-	 * const myStore = {};
+	 * var myStore = {};
 	 * 
-	 * const Item = Construct.extend({
+	 * var Item = Construct.extend({
 	 *     setup: function(params){
 	 *         if (myStore[params.id]){
 	 *             var item = myStore[params.id];
 	 *             
 	 *             // Merge new data to the existing instance:
-	 *             Object.keys( params ).forEach(function( key ){
-	 *                 item[key] = params[key];
-	 *             });
+	 *             Object.assign(item, params);
 	 *             
 	 *             // Return the updated item:
 	 *             return new Construct.ReturnValue( item );
 	 *         } else {
+	 *             // Save to cache store:
+	 *             myStore[this.id] = this;
+	 *             
 	 *             return [params];
 	 *         }
 	 *     },
 	 *     init: function(params){
-	 *         this.id = params.id;
-	 *         this.name = params.name;
-	 *         
-	 *         // Save to cache store:
-	 *         myStore[this.id] = this;
+	 *         Object.assign(this, params);
 	 *     }
 	 * });
 	 * 
-	 * const item_1  = new Item( {id: 1, name: "One"} );
-	 * const item_1a = new Item( {id: 1, name: "OnePlus"} )
+	 * var item_1  = new Item( {id: 1, name: "One"} );
+	 * var item_1a = new Item( {id: 1, name: "OnePlus"} )
 	 * ```
 	 */
 	extend: function (name, staticProperties, instanceProperties) {
@@ -714,32 +711,36 @@ assign(Construct, {
 	 * @function can-construct.ReturnValue ReturnValue
 	 * @parent can-construct.static
 	 * 
-	 * A constructor function which `value` property will be used as a value for a new instance. 
+	 * Use to overwrite the return value of new Construct(...).
 	 * 
 	 * @signature `new Construct.ReturnValue( value )`
 	 * 
-	 * 	@param {*} value A value to be used for a new instance instead of a new object.
+	 *   This constructor function can be used for creating a return value of the `setup` method.
+	 *   [can-construct] will check if the return value is an instance of `Construct.ReturnValue`.
+	 *   If it is then its `value` will be used as the new instance.
 	 * 
-	 * ```
-	 * const Student = function( name, school ){
-	 *     this.name = name;
-	 *     this.school = school;
-	 * } 
+	 *   @param {Object} value A value to be used for a new instance instead of a new object.
 	 * 
-	 * const Person = Construct.extend({
-	 *     setup: function( options ){
-	 *         if (options.school){
-	 *             return new Constructor.ReturnValue( new Student( options.name, options.school ) );
-	 *         } else {
-	 *             return [options];
-	 *         }
-	 *     }
-	 * });
+	 *   ```
+	 *   var Student = function( name, school ){
+	 *       this.name = name;
+	 *       this.school = school;
+	 *   } 
 	 * 
-	 * const myPerson = new Person( {name: "Peter", school: "UFT"} );
+	 *   var Person = Construct.extend({
+	 *       setup: function( options ){
+	 *           if (options.school){
+	 *               return new Constructor.ReturnValue( new Student( options.name, options.school ) );
+	 *           } else {
+	 *               return [options];
+	 *           }
+	 *       }
+	 *   });
 	 * 
-	 * myPerson instanceof Student // => true
-	 * ```
+	 *   var myPerson = new Person( {name: "Ilya", school: "PetrSU"} );
+	 * 
+	 *   myPerson instanceof Student // => true
+	 *   ```
    */
 	ReturnValue: function(value){
 		this.value = value;
@@ -756,8 +757,8 @@ assign(Construct, {
  * @param {*} args The arguments passed to the constructor.
  *
  * @return {Array|undefined|can-construct.ReturnValue} If an array is returned, the array's items are passed as
- * arguments to [can-construct::init init]. If [can-construct.ReturnValue] is returned then the value that passed to it
- * will be used as a value for a new instance. The following example always makes
+ * arguments to [can-construct::init init]. If a [can-construct.ReturnValue] instance is returned, the ReturnValue
+ * instance's value will be returned as the result of calling new Construct(). The following example always makes
  * sure that init is called with a jQuery wrapped element:
  *
  * ```js
