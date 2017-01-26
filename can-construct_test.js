@@ -225,3 +225,38 @@ QUnit.test("setters not invoked on extension (#28)", function(){
 	extending = false;
 	new Base().something = "foo";
 });
+
+QUnit.test("return alternative value simple", function(){
+	var Alternative = function(){};
+	var Base = Construct.extend({
+		setup: function(){
+			return new Construct.ReturnValue( new Alternative() );
+		}
+	});
+	QUnit.ok(new Base() instanceof Alternative, "Should create an instance of Alternative");
+});
+
+QUnit.test("return alternative value on setup (full case)", function(){
+	var Student = function(name, school){
+		this.name = name;
+		this.school = school;
+		this.isStudent = true;
+	};
+	var Person = Construct.extend({
+		setup: function(opts){
+			if (opts.age >= 16){
+				return new Construct.ReturnValue( new Student(opts.name, opts.school) );
+			}
+			opts.isStudent = false;
+			return [opts];
+		},
+		init: function(params){
+			this.age = params.age;
+			this.name = params.name;
+			this.isStudent = params.isStudent;
+		}
+	});
+	QUnit.equal(new Person({age: 12}).isStudent, false, "Age 12 cannot be a student");
+	QUnit.equal(new Person({age: 30}).isStudent, true, "Age 20 can be a student");
+	QUnit.ok(new Person({age: 30}) instanceof Student, "Should return an instance of Student");
+});

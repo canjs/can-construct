@@ -284,6 +284,9 @@ assign(Construct, {
 				writable: true
 			});
 			args = inst.setup.apply(inst, arguments);
+			if (args instanceof Construct.ReturnValue){
+				return args.value;
+			}
 			inst.__inSetup = false;
 		}
 		// Call `init` if there is an `init`
@@ -526,6 +529,46 @@ assign(Construct, {
 	 * dog.speak(); // 'woof'
 	 * blackMamba.speak(); // 'ssssss'
 	 * ```
+	 * 
+	 * ## Alternative value for a new instance
+	 * 
+	 * Sometimes you may want to return some custom value instead of a new object when creating an instance of your class.
+	 * For example, you want your class to act as a singleton, or check whether an item with the given id was already
+	 * created and return an existing one from your cache store (e.g. using [can-connect/constructor/store/store]).
+	 * 
+	 * To achieve this you can return [can-construct.ReturnValue] from `setup` method of your class.
+	 * 
+	 * Lets say you have `myStore` to cache all newly created instances. And if an item already exists you want to merge
+	 * the new data into the existing instance and return the updated instance.
+	 * 
+	 * ```
+	 * var myStore = {};
+	 * 
+	 * var Item = Construct.extend({
+	 *     setup: function(params){
+	 *         if (myStore[params.id]){
+	 *             var item = myStore[params.id];
+	 *             
+	 *             // Merge new data to the existing instance:
+	 *             Object.assign(item, params);
+	 *             
+	 *             // Return the updated item:
+	 *             return new Construct.ReturnValue( item );
+	 *         } else {
+	 *             // Save to cache store:
+	 *             myStore[this.id] = this;
+	 *             
+	 *             return [params];
+	 *         }
+	 *     },
+	 *     init: function(params){
+	 *         Object.assign(this, params);
+	 *     }
+	 * });
+	 * 
+	 * var item_1  = new Item( {id: 1, name: "One"} );
+	 * var item_1a = new Item( {id: 1, name: "OnePlus"} )
+	 * ```
 	 */
 	extend: function (name, staticProperties, instanceProperties) {
 		var shortName = name,
@@ -663,6 +706,44 @@ assign(Construct, {
 		 * console.log(Counter.count); // 1
 		 * ```
 		 */
+	},
+	/**
+	 * @function can-construct.ReturnValue ReturnValue
+	 * @parent can-construct.static
+	 * 
+	 * Use to overwrite the return value of new Construct(...).
+	 * 
+	 * @signature `new Construct.ReturnValue( value )`
+	 * 
+	 *   This constructor function can be used for creating a return value of the `setup` method.
+	 *   [can-construct] will check if the return value is an instance of `Construct.ReturnValue`.
+	 *   If it is then its `value` will be used as the new instance.
+	 * 
+	 *   @param {Object} value A value to be used for a new instance instead of a new object.
+	 * 
+	 *   ```
+	 *   var Student = function( name, school ){
+	 *       this.name = name;
+	 *       this.school = school;
+	 *   } 
+	 * 
+	 *   var Person = Construct.extend({
+	 *       setup: function( options ){
+	 *           if (options.school){
+	 *               return new Constructor.ReturnValue( new Student( options.name, options.school ) );
+	 *           } else {
+	 *               return [options];
+	 *           }
+	 *       }
+	 *   });
+	 * 
+	 *   var myPerson = new Person( {name: "Ilya", school: "PetrSU"} );
+	 * 
+	 *   myPerson instanceof Student // => true
+	 *   ```
+   */
+	ReturnValue: function(value){
+		this.value = value;
 	}
 });
 /**
@@ -675,8 +756,9 @@ assign(Construct, {
  *
  * @param {*} args The arguments passed to the constructor.
  *
- * @return {Array|undefined} If an array is returned, the array's items are passed as
- * arguments to [can-construct::init init]. The following example always makes
+ * @return {Array|undefined|can-construct.ReturnValue} If an array is returned, the array's items are passed as
+ * arguments to [can-construct::init init]. If a [can-construct.ReturnValue] instance is returned, the ReturnValue
+ * instance's value will be returned as the result of calling new Construct(). The following example always makes
  * sure that init is called with a jQuery wrapped element:
  *
  * ```js
