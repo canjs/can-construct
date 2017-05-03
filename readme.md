@@ -1,5 +1,7 @@
 # can-construct
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/canjs/can-construct.svg)](https://greenkeeper.io/)
+
 [![Build Status](https://travis-ci.org/canjs/can-construct.png?branch=master)](https://travis-ci.org/canjs/can-construct)
 
 Easily build constructor functions.
