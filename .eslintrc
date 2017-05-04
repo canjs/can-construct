@@ -1,0 +1,14 @@
+{
+  "env": {
+    "shared-node-browser": true
+  },
+  "extends": [
+    "bitovi/configurations/es5",
+    "bitovi/rules/eslint/open-source/on"
+  ],
+  "globals": {
+  },
+  "rules": {
+    "no-underscore-dangle": 0
+  }
+}
