@@ -602,7 +602,10 @@ assign(Construct, {
       _super = this.prototype,
       Constructor, prototype,
       constructorName,
-      init;
+      init,
+      propName,
+      tt,
+      args;
 
     // Figure out what was passed and normalize it.
     if (typeof shortName !== 'string') {
@@ -646,8 +649,6 @@ assign(Construct, {
     /* eslint-disable no-invalid-this, consistent-return */
     // The dummy class constructor.
     init = function init() {
-      var tt, args, propName;
-
       // All construction is actually done in the init method.
       if (!initializing) {
         //!steal-remove-start
