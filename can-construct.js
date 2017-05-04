@@ -72,6 +72,8 @@ var reservedWords = {
 var constructorNameRegex = /[^A-Z0-9_]/gi;
 //!steal-remove-end
 
+var oldIsConstructor;
+
 // ## construct.js
 // `Construct`
 // _This is a modified version of
@@ -102,8 +104,7 @@ var Construct = function Construct() {
     return Construct.extend.apply(Construct, arguments);
   }
 };
-
-var canGetDescriptor;
+var canGetDescriptor, getDescriptor, inheritGetterSetter, simpleInherit;
 
 try {
   Object.getOwnPropertyDescriptor({
@@ -113,7 +114,7 @@ try {
   canGetDescriptor = false;
 }
 
-var getDescriptor = function getDescriptor(newProps, name) {
+getDescriptor = function getDescriptor(newProps, name) {
   var descriptor = Object.getOwnPropertyDescriptor(newProps, name);
 
   if (descriptor && (descriptor.get || descriptor.set)) {
@@ -122,12 +123,13 @@ var getDescriptor = function getDescriptor(newProps, name) {
 
   return null;
 };
-var inheritGetterSetter = function inheritGetterSetter(newProps, oldProps, addTo) {
-  var descriptor;
+
+inheritGetterSetter = function inheritGetterSetter(newProps, oldProps, addTo) {
+  var descriptor, name;
 
   addTo = addTo || newProps;
 
-  for (var name in newProps) {
+  for (name in newProps) {
     if ((descriptor = getDescriptor(newProps, name))) {
       this._defineProperty(addTo, oldProps, name, descriptor);
     } else {
@@ -135,10 +137,13 @@ var inheritGetterSetter = function inheritGetterSetter(newProps, oldProps, addTo
     }
   }
 };
-var simpleInherit = function simpleInherit(newProps, oldProps, addTo) {
+
+simpleInherit = function simpleInherit(newProps, oldProps, addTo) {
+  var name;
+
   addTo = addTo || newProps;
 
-  for (var name in newProps) {
+  for (name in newProps) { // eslint-disable-line guard-for-in
     Construct._overwrite(addTo, oldProps, name, newProps[name]);
   }
 };
@@ -588,6 +593,7 @@ assign(Construct, {
    * var item_1a = new Item( {id: 1, name: "OnePlus"} )
    * ```
    */
+  // eslint-disable-next-line complexity
   extend: function extend(name, staticProperties, instanceProperties) {
     var shortName = name,
       klass = staticProperties,
@@ -640,14 +646,18 @@ assign(Construct, {
     /* eslint-disable no-invalid-this, consistent-return */
     // The dummy class constructor.
     init = function init() {
+      var tt, args, propName;
+
       // All construction is actually done in the init method.
       if (!initializing) {
         //!steal-remove-start
+        /* eslint-disable no-mixed-operators */
         if (!this || (this.constructor !== Constructor) &&
         // We are being called without `new` or we are extending.
         arguments.length && Constructor.constructorExtends) {
           dev.warn('can/construct/construct.js: extending a Construct without calling extend');
         }
+        /* eslint-enable no-mixed-operators */
         //!steal-remove-end
 
         return (!this || this.constructor !== Constructor) &&
@@ -665,7 +675,7 @@ assign(Construct, {
       };
 
     // Copy old stuff onto class (can probably be merged w/ inherit)
-    for (var propName in _superClass) {
+    for (propName in _superClass) {
       if (_superClass.hasOwnProperty(propName)) {
         Constructor[propName] = _superClass[propName];
       }
@@ -694,14 +704,15 @@ assign(Construct, {
     if (shortName !== undefined) {
       Constructor.shortName = shortName;
     }
+
     // Make sure our prototype looks nice.
     Constructor.prototype.constructor = Constructor;
     // Call the class `setup` and `init`
-    var t = [_superClass].concat(makeArray(arguments)),
-      args = Constructor.setup.apply(Constructor, t);
+    tt = [_superClass].concat(makeArray(arguments));
+    args = Constructor.setup.apply(Constructor, tt);
 
     if (Constructor.init) {
-      Constructor.init.apply(Constructor, args || t);
+      Constructor.init.apply(Constructor, args || tt);
     }
     /**
      * @prototype
@@ -883,7 +894,7 @@ Construct.prototype.setup = function setup() {};
  */
 Construct.prototype.init = function init() {};
 
-var oldIsConstructor = types.isConstructor;
+oldIsConstructor = types.isConstructor;
 
 types.isConstructor = function isConstructor(obj) {
   return obj.prototype instanceof Construct || oldIsConstructor(obj);
