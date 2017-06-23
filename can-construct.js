@@ -3,7 +3,6 @@ var assign = require("can-util/js/assign/assign");
 var deepAssign = require("can-util/js/deep-assign/deep-assign");
 var dev = require("can-util/js/dev/dev");
 var makeArray = require("can-util/js/make-array/make-array");
-var types = require('can-types');
 var namespace = require('can-namespace');
 //!steal-remove-start
 var CanString = require('can-util/js/string/string');
@@ -854,11 +853,5 @@ Construct.prototype.setup = function () {};
  * the inheritance chain.
  */
 Construct.prototype.init = function () {};
-
-var oldIsConstructor = types.isConstructor;
-types.isConstructor = function(obj){
-	return obj.prototype instanceof Construct || oldIsConstructor.call(null, obj);
-};
-
 
 module.exports = namespace.Construct = Construct;
