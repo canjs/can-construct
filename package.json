@@ -19,7 +19,6 @@
     "release:minor": "npm version minor && npm publish",
     "release:major": "npm version major && npm publish",
     "build": "node build.js",
-    "develop": "done-serve --static --develop --port 8080",
     "release:pre": "npm version prerelease && npm publish"
   },
   "main": "can-construct",
@@ -39,9 +38,6 @@
     "can-util": "^3.9.0-pre.3"
   },
   "devDependencies": {
-    "done-serve": "^0.2.4",
-    "donejs-cli": "^0.9.5",
-    "generator-donejs": "^1.0.7",
     "jshint": "^2.9.1",
     "steal": "^1.2.8",
     "steal-qunit": "^1.0.1",
