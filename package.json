@@ -34,8 +34,8 @@
   },
   "dependencies": {
     "can-namespace": "1.0.0",
-    "can-types": "^1.1.0-pre.1",
-    "can-util": "^3.9.0-pre.3"
+    "can-types": "^1.1.0",
+    "can-util": "^3.9.0"
   },
   "devDependencies": {
     "jshint": "^2.9.1",
