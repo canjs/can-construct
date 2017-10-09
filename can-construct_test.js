@@ -2,6 +2,7 @@ QUnit = require('steal-qunit');
 var Construct = require('can-construct');
 var dev = require("can-util/js/dev/");
 var makeArray = require("can-util/js/make-array/");
+var canSymbol = require("can-symbol");
 
 QUnit.module('can-construct', {
 	setup: function () {
@@ -259,4 +260,33 @@ QUnit.test("return alternative value on setup (full case)", function(){
 	QUnit.equal(new Person({age: 12}).isStudent, false, "Age 12 cannot be a student");
 	QUnit.equal(new Person({age: 30}).isStudent, true, "Age 20 can be a student");
 	QUnit.ok(new Person({age: 30}) instanceof Student, "Should return an instance of Student");
+});
+
+QUnit.test("default implementation of canSymbol('can.name')", function(assert) {
+	var AnonCtor = Construct.extend({});
+	var Person = Construct.extend("Person", {});
+
+	var getName = function(instance) {
+		return instance[canSymbol.for("can.name")]();
+	};
+
+	assert.equal(
+		getName(new AnonCtor()),
+		"Constructor",
+		"should return the default constructor name"
+	);
+
+	assert.equal(
+		getName(new Person()),
+		"Person",
+		"should return the constructor short name"
+	);
+
+	var person = new Person();
+	person._cid = 1;
+	assert.equal(
+		getName(person),
+		"Person(1)",
+		"should decorate the name with cid if present"
+	);
 });
