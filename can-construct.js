@@ -4,6 +4,8 @@ var deepAssign = require("can-util/js/deep-assign/deep-assign");
 var dev = require("can-util/js/dev/dev");
 var makeArray = require("can-util/js/make-array/make-array");
 var namespace = require('can-namespace');
+var canReflect = require("can-reflect");
+var canSymbol = require("can-symbol");
 //!steal-remove-start
 var CanString = require('can-util/js/string/string');
 var reservedWords = {
@@ -528,35 +530,35 @@ assign(Construct, {
 	 * dog.speak(); // 'woof'
 	 * blackMamba.speak(); // 'ssssss'
 	 * ```
-	 * 
+	 *
 	 * ## Alternative value for a new instance
-	 * 
+	 *
 	 * Sometimes you may want to return some custom value instead of a new object when creating an instance of your class.
 	 * For example, you want your class to act as a singleton, or check whether an item with the given id was already
 	 * created and return an existing one from your cache store (e.g. using [can-connect/constructor/store/store]).
-	 * 
+	 *
 	 * To achieve this you can return [can-construct.ReturnValue] from `setup` method of your class.
-	 * 
+	 *
 	 * Lets say you have `myStore` to cache all newly created instances. And if an item already exists you want to merge
 	 * the new data into the existing instance and return the updated instance.
-	 * 
+	 *
 	 * ```
 	 * var myStore = {};
-	 * 
+	 *
 	 * var Item = Construct.extend({
 	 *     setup: function(params){
 	 *         if (myStore[params.id]){
 	 *             var item = myStore[params.id];
-	 *             
+	 *
 	 *             // Merge new data to the existing instance:
 	 *             Object.assign(item, params);
-	 *             
+	 *
 	 *             // Return the updated item:
 	 *             return new Construct.ReturnValue( item );
 	 *         } else {
 	 *             // Save to cache store:
 	 *             myStore[this.id] = this;
-	 *             
+	 *
 	 *             return [params];
 	 *         }
 	 *     },
@@ -564,7 +566,7 @@ assign(Construct, {
 	 *         Object.assign(this, params);
 	 *     }
 	 * });
-	 * 
+	 *
 	 * var item_1  = new Item( {id: 1, name: "One"} );
 	 * var item_1a = new Item( {id: 1, name: "OnePlus"} )
 	 * ```
@@ -709,23 +711,23 @@ assign(Construct, {
 	/**
 	 * @function can-construct.ReturnValue ReturnValue
 	 * @parent can-construct.static
-	 * 
+	 *
 	 * Use to overwrite the return value of new Construct(...).
-	 * 
+	 *
 	 * @signature `new Construct.ReturnValue( value )`
-	 * 
+	 *
 	 *   This constructor function can be used for creating a return value of the `setup` method.
 	 *   [can-construct] will check if the return value is an instance of `Construct.ReturnValue`.
 	 *   If it is then its `value` will be used as the new instance.
-	 * 
+	 *
 	 *   @param {Object} value A value to be used for a new instance instead of a new object.
-	 * 
+	 *
 	 *   ```
 	 *   var Student = function( name, school ){
 	 *       this.name = name;
 	 *       this.school = school;
-	 *   } 
-	 * 
+	 *   }
+	 *
 	 *   var Person = Construct.extend({
 	 *       setup: function( options ){
 	 *           if (options.school){
@@ -735,9 +737,9 @@ assign(Construct, {
 	 *           }
 	 *       }
 	 *   });
-	 * 
+	 *
 	 *   var myPerson = new Person( {name: "Ilya", school: "PetrSU"} );
-	 * 
+	 *
 	 *   myPerson instanceof Student // => true
 	 *   ```
    */
@@ -853,5 +855,9 @@ Construct.prototype.setup = function () {};
  * the inheritance chain.
  */
 Construct.prototype.init = function () {};
+
+canReflect.set(Construct.prototype, canSymbol.for("can.name"), function() {
+	return this.constructor.name + (this._cid ? "(" + this._cid + ")" : "");
+});
 
 module.exports = namespace.Construct = Construct;

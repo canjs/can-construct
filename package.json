@@ -35,6 +35,8 @@
   },
   "dependencies": {
     "can-namespace": "1.0.0",
+    "can-reflect": "^1.4.5",
+    "can-symbol": "canjs/can-symbol#friendly-name",
     "can-types": "^1.1.0",
     "can-util": "^3.9.0"
   },
