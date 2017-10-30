@@ -1,5 +1,6 @@
 @module {function} can-construct can-construct
-@parent can-infrastructure
+@parent can-typed-data
+@collection can-infrastructure
 @package ../package.json
 
 @description
