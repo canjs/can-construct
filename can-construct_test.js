@@ -73,7 +73,9 @@ test('namespaces', function () {
 
 	ok(!window.Bar, "not added to global namespace");
 
-
+	if (Object.getOwnPropertyDescriptor) {
+		equal(fb.name, 'Bar', 'name is right');
+	}
 	equal(fb.shortName, 'Bar', 'short name is right');
 });
 test('setups', function () {
