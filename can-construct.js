@@ -665,6 +665,16 @@ assign(Construct, {
 		});
 
 		if (shortName !== undefined) {
+			if (Object.getOwnPropertyDescriptor) {
+				var desc = Object.getOwnPropertyDescriptor(Constructor, 'name');
+				if (!desc || desc.configurable) {
+					Object.defineProperty(
+						Constructor,
+						'name',
+						{ writable: true, value: shortName, configurable: true }
+					);
+				}
+			}
 			Constructor.shortName = shortName;
 		}
 		// Make sure our prototype looks nice.
