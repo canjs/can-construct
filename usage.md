@@ -4,7 +4,7 @@
 
 With StealJS, you can import this module directly in a template that is autorendered:
 
-```javascript
+```js
 import plugin from 'can-construct';
 ```
 
@@ -13,7 +13,7 @@ import plugin from 'can-construct';
 Use `require` to load `can-construct` and everything else
 needed to create a template that uses `can-construct`:
 
-```javascript
+```js
 import plugin from "can-construct";
 ```
 
