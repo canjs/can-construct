@@ -5,7 +5,7 @@
 With StealJS, you can import this module directly in a template that is autorendered:
 
 ```js
-import plugin from 'can-construct';
+import plugin from "can-construct";
 ```
 
 ### CommonJS use
