@@ -25,46 +25,46 @@ In the example below, `Animal` is a constructor function returned by [can-constr
 method, and the `Animal` constructor has a `legs` property.
 
 ```js
-var Construct = require("can-construct");
-var Animal = Construct.extend({
+import Construct from "can-construct";
+const Animal = Construct.extend( {
 	legs: 4
 },
 {
-  speak: function() {
-  	console.log(this.sound);
-  }
-});
+	speak: function() {
+		console.log( this.sound );
+	}
+} );
 ```
 
 An optional [can-construct::setup setup] function can be specified to handle the instantiation of the constructor function.
 ```js
-var Animal = Construct.extend({
+const Animal = Construct.extend( {
 	legs: 4,
-	setup: function(sound) {
-		return [sound]
+	setup: function( sound ) {
+		return [ sound ];
 	}
 },
 {
-  speak: function() {
-  	console.log(this.sound);
-  }
-});
+	speak: function() {
+		console.log( this.sound );
+	}
+} );
 ```
 [can-construct::setup setup] returns {Array|undefined} If an array is returned, the array's items are passed as arguments to [can-construct::init init].
 
 In addition [can-construct::init init] can be specified which is a method that gets called with each new instance.
 ```js
-var Animal = Construct.extend({
+const Animal = Construct.extend( {
 	legs: 4,
-	init: function(sound) {
+	init: function( sound ) {
 		this.sound = sound;
 	}
 },
 {
-  speak: function() {
-  	console.log(this.sound);
-  }
-});
+	speak: function() {
+		console.log( this.sound );
+	}
+} );
 ```
 
 For more information on deciding when to use [can-construct::setup setup] or [can-construct::init init]
@@ -74,7 +74,7 @@ You can make instances of your object by calling your constructor function with 
 method gets called (if you supplied one):
 
 ```js
-var panther = new Animal('growl');
+const panther = new Animal( "growl" );
 panther.speak(); // "growl"
 panther instanceof Animal; // true
 ```
