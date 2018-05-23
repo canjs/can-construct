@@ -1,7 +1,6 @@
 QUnit = require('steal-qunit');
 var Construct = require('can-construct');
-var dev = require("can-util/js/dev/");
-var makeArray = require("can-util/js/make-array/");
+var dev = require("can-log/dev/dev");
 
 QUnit.module('can-construct', {
 	setup: function () {
@@ -106,9 +105,9 @@ test('setups', function () {
 	equal(staticInit, 2);
 	equal(protoSetup, 3);
 	equal(protoInit, 4);
-	deepEqual(makeArray(staticInitArgs), ['something']);
-	deepEqual(makeArray(protoInitArgs), ['Ford: geo']);
-	deepEqual(makeArray(staticSetupArgs), [
+	deepEqual(Array.prototype.slice.call(staticInitArgs), ['something']);
+	deepEqual(Array.prototype.slice.call(protoInitArgs), ['Ford: geo']);
+	deepEqual(Array.prototype.slice.call(staticSetupArgs), [
 		Construct,
 		'Car',
 		staticProps,

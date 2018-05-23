@@ -34,7 +34,10 @@
     ]
   },
   "dependencies": {
+    "can-log": "^1.0.0",
     "can-namespace": "1.0.0",
+    "can-reflect": "^1.16.1",
+    "can-string": "0.0.5",
     "can-util": "^3.9.0"
   },
   "devDependencies": {
