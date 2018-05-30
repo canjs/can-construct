@@ -377,7 +377,7 @@ canReflect.assignMap(Construct, {
 	 */
 	setup: function (base) {
 		var defaults = canReflect.assignDeepMap({},base.defaults);
-		canReflect.assignDeepMap(defaults,this.defaults);
+		this.defaults = canReflect.assignDeepMap(defaults,this.defaults);
 	},
 	// Create's a new `class` instance without initializing by setting the
 	// `initializing` flag.

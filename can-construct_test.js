@@ -261,3 +261,18 @@ QUnit.test("return alternative value on setup (full case)", function(){
 	QUnit.equal(new Person({age: 30}).isStudent, true, "Age 20 can be a student");
 	QUnit.ok(new Person({age: 30}) instanceof Student, "Should return an instance of Student");
 });
+
+QUnit.test("extends defaults right", function(){
+	var BASE = Construct.extend({
+		defaults: {
+			foo: 'bar'
+		}
+	}, {});
+	var INHERIT = BASE.extend({
+		defaults: {
+			newProp: 'newVal'
+		}
+	}, {});
+	ok(INHERIT.defaults.foo === 'bar', 'Class must inherit defaults from the parent class');
+	ok(INHERIT.defaults.newProp === 'newVal', 'Class must have own defaults');
+});
