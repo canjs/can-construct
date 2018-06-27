@@ -3,70 +3,72 @@ var canReflect = require("can-reflect");
 var dev = require("can-log/dev/dev");
 var namespace = require('can-namespace');
 //!steal-remove-start
-var CanString = require('can-string');
-var reservedWords = {
-	"abstract": true,
-	"boolean": true,
-	"break": true,
-	"byte": true,
-	"case": true,
-	"catch": true,
-	"char": true,
-	"class": true,
-	"const": true,
-	"continue": true,
-	"debugger": true,
-	"default": true,
-	"delete": true,
-	"do": true,
-	"double": true,
-	"else": true,
-	"enum": true,
-	"export": true,
-	"extends": true,
-	"false": true,
-	"final": true,
-	"finally": true,
-	"float": true,
-	"for": true,
-	"function": true,
-	"goto": true,
-	"if": true,
-	"implements": true,
-	"import": true,
-	"in": true,
-	"instanceof": true,
-	"int": true,
-	"interface": true,
-	"let": true,
-	"long": true,
-	"native": true,
-	"new": true,
-	"null": true,
-	"package": true,
-	"private": true,
-	"protected": true,
-	"public": true,
-	"return": true,
-	"short": true,
-	"static": true,
-	"super": true,
-	"switch": true,
-	"synchronized": true,
-	"this": true,
-	"throw": true,
-	"throws": true,
-	"transient": true,
-	"true": true,
-	"try": true,
-	"typeof": true,
-	"var": true,
-	"void": true,
-	"volatile": true,
-	"while": true,
-	"with": true
-};
-var constructorNameRegex = /[^A-Z0-9_]/gi;
+if(process.env.NODE_ENV !== 'production') {
+	var CanString = require('can-string');
+	var reservedWords = {
+		"abstract": true,
+		"boolean": true,
+		"break": true,
+		"byte": true,
+		"case": true,
+		"catch": true,
+		"char": true,
+		"class": true,
+		"const": true,
+		"continue": true,
+		"debugger": true,
+		"default": true,
+		"delete": true,
+		"do": true,
+		"double": true,
+		"else": true,
+		"enum": true,
+		"export": true,
+		"extends": true,
+		"false": true,
+		"final": true,
+		"finally": true,
+		"float": true,
+		"for": true,
+		"function": true,
+		"goto": true,
+		"if": true,
+		"implements": true,
+		"import": true,
+		"in": true,
+		"instanceof": true,
+		"int": true,
+		"interface": true,
+		"let": true,
+		"long": true,
+		"native": true,
+		"new": true,
+		"null": true,
+		"package": true,
+		"private": true,
+		"protected": true,
+		"public": true,
+		"return": true,
+		"short": true,
+		"static": true,
+		"super": true,
+		"switch": true,
+		"synchronized": true,
+		"this": true,
+		"throw": true,
+		"throws": true,
+		"transient": true,
+		"true": true,
+		"try": true,
+		"typeof": true,
+		"var": true,
+		"void": true,
+		"volatile": true,
+		"while": true,
+		"with": true
+	};
+	var constructorNameRegex = /[^A-Z0-9_]/gi;
+}
 //!steal-remove-end
 
 // ## construct.js
@@ -79,13 +81,15 @@ var constructorNameRegex = /[^A-Z0-9_]/gi;
 var initializing = 0;
 
 //!steal-remove-start
-var namedCtor = (function(cache){
-	return function(name, fn) {
-		return ((name in cache) ? cache[name] : cache[name] = new Function(
-			"__", "function "+name+"(){return __.apply(this,arguments)};return "+name
-		))( fn );
-	};
-}({}));
+if(process.env.NODE_ENV !== 'production') {
+	var namedCtor = (function(cache){
+		return function(name, fn) {
+			return ((name in cache) ? cache[name] : cache[name] = new Function(
+				"__", "function "+name+"(){return __.apply(this,arguments)};return "+name
+			))( fn );
+		};
+	}({}));
+}
 //!steal-remove-end
 
 /**
@@ -606,9 +610,12 @@ canReflect.assignMap(Construct, {
 
 		// Strip semicolons
 		//!steal-remove-start
+		// wrapping this var will cause "used out of scope." when linting
 		var constructorName = shortName ? shortName.replace(constructorNameRegex, '_') : 'Constructor';
-		if(reservedWords[constructorName]) {
-			constructorName = CanString.capitalize(constructorName);
+		if(process.env.NODE_ENV !== 'production') {
+			if(reservedWords[constructorName]) {
+				constructorName = CanString.capitalize(constructorName);
+			}
 		}
 		//!steal-remove-end
 
@@ -618,10 +625,12 @@ canReflect.assignMap(Construct, {
 			// All construction is actually done in the init method.
 			if (!initializing) {
 				//!steal-remove-start
-				if(!this || (this.constructor !== Constructor) &&
-				// We are being called without `new` or we are extending.
-				arguments.length && Constructor.constructorExtends) {
-					dev.warn('can/construct/construct.js: extending a Construct without calling extend');
+				if(process.env.NODE_ENV !== 'production') {
+					if(!this || (this.constructor !== Constructor) &&
+					// We are being called without `new` or we are extending.
+					arguments.length && Constructor.constructorExtends) {
+						dev.warn('can/construct/construct.js: extending a Construct without calling extend');
+					}
 				}
 				//!steal-remove-end
 
