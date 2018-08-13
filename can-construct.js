@@ -332,19 +332,19 @@ canReflect.assignMap(Construct, {
 	 * functions that inherit from Group will be added to
 	 * `Group.childGroups`.
 	 *
-	 *
-	 *     Group = Construct.extend({
-	 *       setup: function(Construct, fullName, staticProps, protoProps){
-	 *         this.childGroups = [];
-	 *         if(Construct !== Construct){
-	 *           this.childGroups.push(Construct)
-	 *         }
-	 *         Construct.setup.apply(this, arguments)
-	 *       }
-	 *     },{})
-	 *     var Flock = Group.extend(...)
-	 *     Group.childGroups[0] //-> Flock
-	 *
+	 * ```js
+	 * Group = Construct.extend({
+	 *   setup: function(Construct, fullName, staticProps, protoProps){
+	 *     this.childGroups = [];
+	 *     if(Construct !== Construct){
+	 *       this.childGroups.push(Construct)
+	 *     }
+	 *     Construct.setup.apply(this, arguments)
+	 *   }
+	 * },{})
+	 * var Flock = Group.extend(...)
+	 * Group.childGroups[0] //-> Flock
+	 * ```
 	 * @param {constructor} base The base constructor that is being inherited from.
 	 * @param {String} fullName The name of the new constructor.
 	 * @param {Object} staticProps The static properties of the new constructor.
@@ -738,7 +738,7 @@ canReflect.assignMap(Construct, {
 	 *
 	 *   @param {Object} value A value to be used for a new instance instead of a new object.
 	 *
-	 *   ```
+	 *   ```js
 	 *   var Student = function( name, school ){
 	 *       this.name = name;
 	 *       this.school = school;
