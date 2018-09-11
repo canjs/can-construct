@@ -134,6 +134,14 @@ var getDescriptor = function(newProps, name) {
 		for (var name in newProps) {
 			Construct._overwrite(addTo, oldProps, name, newProps[name]);
 		}
+	},
+	defineNonEnumerable = function(obj, prop, value) {
+		Object.defineProperty(obj, prop, {
+			configurable: true,
+			writable: true,
+			enumerable: false,
+			value: value
+		});
 	};
 /**
  * @static
@@ -686,7 +694,7 @@ canReflect.assignMap(Construct, {
 			Constructor.shortName = shortName;
 		}
 		// Make sure our prototype looks nice.
-		Constructor.prototype.constructor = Constructor;
+		defineNonEnumerable(Constructor.prototype, "constructor", Constructor);
 		// Call the class `setup` and `init`
 		var t = [_super_class].concat(Array.prototype.slice.call(arguments)),
 			args = Constructor.setup.apply(Constructor, t);
@@ -810,7 +818,7 @@ canReflect.assignMap(Construct, {
  *   - you want to modify the arguments that will get passed to `init`.
  *
  */
-Construct.prototype.setup = function () {};
+defineNonEnumerable(Construct.prototype, function () {});
 /**
  * @function can-construct.prototype.init init
  * @parent can-construct.prototype
@@ -870,6 +878,6 @@ Construct.prototype.setup = function () {};
  * check that they aren't being changed by `setup` along
  * the inheritance chain.
  */
-Construct.prototype.init = function () {};
+defineNonEnumerable(Construct.prototype, "init", function () {});
 
 module.exports = namespace.Construct = Construct;

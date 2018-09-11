@@ -276,3 +276,19 @@ QUnit.test("extends defaults right", function(){
 	ok(INHERIT.defaults.foo === 'bar', 'Class must inherit defaults from the parent class');
 	ok(INHERIT.defaults.newProp === 'newVal', 'Class must have own defaults');
 });
+
+QUnit.test("enumerability", function(){
+	var Parent = Construct.extend("Parent", {});
+
+	var child = new Parent();
+	child.foo = "bar";
+
+	var props = {};
+	for(var prop in child) {
+		props[prop] = true;
+	}
+
+	QUnit.deepEqual(props, {
+		foo: true
+	}, "only has ownProps");
+});
