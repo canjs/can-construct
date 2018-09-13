@@ -292,3 +292,9 @@ QUnit.test("enumerability", function(){
 		foo: true
 	}, "only has ownProps");
 });
+
+QUnit.test("Has default init, setup functions", function(){
+	var instance = new Construct();
+	QUnit.equal(typeof instance.init, "function", "has init");
+	QUnit.equal(typeof instance.setup, "function", "has setup");
+});

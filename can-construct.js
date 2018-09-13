@@ -818,7 +818,7 @@ canReflect.assignMap(Construct, {
  *   - you want to modify the arguments that will get passed to `init`.
  *
  */
-defineNonEnumerable(Construct.prototype, function () {});
+defineNonEnumerable(Construct.prototype, "setup", function () {});
 /**
  * @function can-construct.prototype.init init
  * @parent can-construct.prototype
