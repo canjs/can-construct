@@ -2,6 +2,10 @@
 var canReflect = require("can-reflect");
 var dev = require("can-log/dev/dev");
 var namespace = require('can-namespace');
+var canSymbol = require("can-symbol");
+
+var inSetupSymbol = canSymbol.for("can.initializing");
+
 //!steal-remove-start
 if(process.env.NODE_ENV !== 'production') {
 	var CanString = require('can-string');
@@ -292,11 +296,18 @@ canReflect.assignMap(Construct, {
 				value: true,
 				writable: true
 			});
+			Object.defineProperty(inst, inSetupSymbol, {
+				configurable: true,
+				enumerable: false,
+				value: true,
+				writable: true
+			});
 			args = inst.setup.apply(inst, arguments);
 			if (args instanceof Construct.ReturnValue){
 				return args.value;
 			}
 			inst.__inSetup = false;
+			inst[inSetupSymbol] = false;
 		}
 		// Call `init` if there is an `init`
 		// If `setup` returned `args`, use those as the arguments
