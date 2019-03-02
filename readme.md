@@ -5,8 +5,6 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/canjs/can-construct/blob/master/LICENSE.md)
 [![npm version](https://badge.fury.io/js/can-construct.svg)](https://www.npmjs.com/package/can-construct)
 [![Travis build status](https://travis-ci.org/canjs/can-construct.svg?branch=master)](https://travis-ci.org/canjs/can-construct)
-[![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/canjs/can-construct?branch=master&svg=true)](https://ci.appveyor.com/project/matthewp/can-construct)
-[![Coverage status](https://coveralls.io/repos/github/canjs/can-construct/badge.svg?branch=master)](https://coveralls.io/github/canjs/can-construct?branch=master)
 [![Greenkeeper badge](https://badges.greenkeeper.io/canjs/can-construct.svg)](https://greenkeeper.io/)
 
 Easily build constructor functions.
