@@ -298,3 +298,24 @@ QUnit.test("Has default init, setup functions", function(){
 	QUnit.equal(typeof instance.init, "function", "has init");
 	QUnit.equal(typeof instance.setup, "function", "has setup");
 });
+
+QUnit.test("Extending should not update defaults nested objects", function() {
+	var Parent = Construct.extend({
+		defaults: {
+			obj: {
+				foo: "Bar"
+			}
+		}
+	},{});
+
+	var Child = Parent.extend({
+		defaults: {
+			obj: {
+				foo: "Baz"
+			}
+		}
+	}, {});
+
+	QUnit.equal(Parent.defaults.obj.foo, "Bar", "Base defaults are not changed");
+	QUnit.equal(Child.defaults.obj.foo, "Baz", "Child defaults get defaults right");
+});
