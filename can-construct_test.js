@@ -3,7 +3,7 @@ var Construct = require('can-construct');
 var dev = require("can-log/dev/dev");
 
 QUnit.module('can-construct', {
-	setup: function () {
+	beforeEach: function(assert) {
 		var Animal = this.Animal = Construct.extend({
 			count: 0,
 			test: function () {
@@ -39,45 +39,45 @@ QUnit.module('can-construct', {
 		});
 	}
 });
-test('inherit', function () {
+QUnit.test('inherit', function(assert) {
 	var Base = Construct({});
-	ok(new Base() instanceof Construct);
+	assert.ok(new Base() instanceof Construct);
 	var Inherit = Base({});
-	ok(new Inherit() instanceof Base);
+	assert.ok(new Inherit() instanceof Base);
 });
-test('Creating', function () {
+QUnit.test('Creating', function(assert) {
 	new this.Dog();
 	var a1 = new this.Animal();
 	new this.Animal();
 	var ajax = new this.Ajax(1000);
-	equal(2, this.Animal.count, 'right number of animals');
-	equal(1, this.Dog.count, 'right number of animals');
-	ok(this.Dog.match, 'right number of animals');
-	ok(!this.Animal.match, 'right number of animals');
-	ok(this.Dog.test(), 'right number of animals');
-	ok(!this.Animal.test(), 'right number of animals');
-	equal(1, this.Ajax.count, 'right number of animals');
-	equal(2, this.Animal.count, 'right number of animals');
-	equal(true, ajax.eyes, 'right number of animals');
-	equal(1000, ajax.hairs, 'right number of animals');
-	ok(a1 instanceof this.Animal);
-	ok(a1 instanceof Construct);
+	assert.equal(2, this.Animal.count, 'right number of animals');
+	assert.equal(1, this.Dog.count, 'right number of animals');
+	assert.ok(this.Dog.match, 'right number of animals');
+	assert.ok(!this.Animal.match, 'right number of animals');
+	assert.ok(this.Dog.test(), 'right number of animals');
+	assert.ok(!this.Animal.test(), 'right number of animals');
+	assert.equal(1, this.Ajax.count, 'right number of animals');
+	assert.equal(2, this.Animal.count, 'right number of animals');
+	assert.equal(true, ajax.eyes, 'right number of animals');
+	assert.equal(1000, ajax.hairs, 'right number of animals');
+	assert.ok(a1 instanceof this.Animal);
+	assert.ok(a1 instanceof Construct);
 });
-test('new instance', function () {
+QUnit.test('new instance', function(assert) {
 	var d = this.Ajax.newInstance(6);
-	equal(6, d.hairs);
+	assert.equal(6, d.hairs);
 });
-test('namespaces', function () {
+QUnit.test('namespaces', function(assert) {
 	var fb = Construct.extend('Bar');
 
-	ok(!window.Bar, "not added to global namespace");
+	assert.ok(!window.Bar, "not added to global namespace");
 
 	if (Object.getOwnPropertyDescriptor) {
-		equal(fb.name, 'Bar', 'name is right');
+		assert.equal(fb.name, 'Bar', 'name is right');
 	}
-	equal(fb.shortName, 'Bar', 'short name is right');
+	assert.equal(fb.shortName, 'Bar', 'short name is right');
 });
-test('setups', function () {
+QUnit.test('setups', function(assert) {
 	var order = 0,
 		staticSetup, staticSetupArgs, staticInit, staticInitArgs, protoSetup, protoInitArgs, protoInit, staticProps = {
 			setup: function () {
@@ -101,13 +101,13 @@ test('setups', function () {
 		};
 	var Car = Construct.extend('Car', staticProps, protoProps);
 	new Car('geo');
-	equal(staticSetup, 1);
-	equal(staticInit, 2);
-	equal(protoSetup, 3);
-	equal(protoInit, 4);
-	deepEqual(Array.prototype.slice.call(staticInitArgs), ['something']);
-	deepEqual(Array.prototype.slice.call(protoInitArgs), ['Ford: geo']);
-	deepEqual(Array.prototype.slice.call(staticSetupArgs), [
+	assert.equal(staticSetup, 1);
+	assert.equal(staticInit, 2);
+	assert.equal(protoSetup, 3);
+	assert.equal(protoInit, 4);
+	assert.deepEqual(Array.prototype.slice.call(staticInitArgs), ['something']);
+	assert.deepEqual(Array.prototype.slice.call(protoInitArgs), ['Ford: geo']);
+	assert.deepEqual(Array.prototype.slice.call(staticSetupArgs), [
 		Construct,
 		'Car',
 		staticProps,
@@ -115,19 +115,19 @@ test('setups', function () {
 	], 'static construct');
 	//now see if staticSetup gets called again ...
 	Car.extend('Truck');
-	equal(staticSetup, 5, 'Static setup is called if overwriting');
+	assert.equal(staticSetup, 5, 'Static setup is called if overwriting');
 });
-test('Creating without extend', function () {
+QUnit.test('Creating without extend', function(assert) {
 	var Bar = Construct('Bar', {
 		ok: function () {
-			ok(true, 'ok called');
+			assert.ok(true, 'ok called');
 		}
 	});
 	new Bar()
 		.ok();
 	var Foo = Bar('Foo', {
 		dude: function () {
-			ok(true, 'dude called');
+			assert.ok(true, 'dude called');
 		}
 	});
 	new Foo()
@@ -136,11 +136,11 @@ test('Creating without extend', function () {
 
 //!steal-remove-start
 if (dev) {
-	test('console warning if extend is not used without new (#932)', function () {
+	QUnit.test('console warning if extend is not used without new (#932)', function(assert) {
 
 		var oldlog = dev.warn;
 		dev.warn = function (text) {
-			ok(text, "got a message");
+			assert.ok(text, "got a message");
 			dev.warn = oldlog;
 		};
 		var K1 = Construct({});
@@ -149,42 +149,42 @@ if (dev) {
 }
 //!steal-remove-end
 
-test("setup called with original arguments", function(){
+QUnit.test("setup called with original arguments", function(assert) {
 	var o2 = {};
 	var o1 = {
 		setup: function(base, arg1, arg2){
-			equal(o1, arg1, "first argument is correct");
-			equal(o2, arg2, "second argument is correct");
+			assert.equal(o1, arg1, "first argument is correct");
+			assert.equal(o2, arg2, "second argument is correct");
 		}
 	};
 
 	Construct.extend(o1, o2);
 });
 
-test("legacy namespace strings (A.B.C) accepted", function() {
+QUnit.test("legacy namespace strings (A.B.C) accepted", function(assert) {
 
 	var Type = Construct.extend("Foo.Bar.Baz");
 	var expectedValue = ~steal.config("env").indexOf("production") ? "" : "Foo_Bar_Baz";
 
-	ok(new Type() instanceof Construct, "No unexpected behavior in the prototype chain");
+	assert.ok(new Type() instanceof Construct, "No unexpected behavior in the prototype chain");
 	if (Function.prototype.name) {
-		equal(Type.name, expectedValue, "Name becomes underscored");
+		assert.equal(Type.name, expectedValue, "Name becomes underscored");
 	}
 });
 
-test("reserved words accepted", function() {
+QUnit.test("reserved words accepted", function(assert) {
 
 	var Type = Construct.extend("const");
 	var expectedValue = ~steal.config("env").indexOf("production") ? "" : "Const";
 
-	ok(new Type() instanceof Construct, "No unexpected behavior in the prototype chain");
+	assert.ok(new Type() instanceof Construct, "No unexpected behavior in the prototype chain");
 	if (Function.prototype.name) {
-		equal(Type.name, expectedValue, "Name becomes capitalized");
+		assert.equal(Type.name, expectedValue, "Name becomes capitalized");
 	}
 });
 
 
-test("basic injection attacks thwarted", function() {
+QUnit.test("basic injection attacks thwarted", function(assert) {
 
 	var rootToken = typeof window === "undefined" ? "global" : "window";
 	var rootObject = typeof window === "undefined" ? global : window;
@@ -196,24 +196,24 @@ test("basic injection attacks thwarted", function() {
 		MalignantType = Construct.extend("(){};" + rootToken + "." + expando + "='bar';var f=function");
 	} catch(e) { // ok if it fails
 	} finally {
-		equal(rootObject[expando], undefined, "Injected code doesn't run");
+		assert.equal(rootObject[expando], undefined, "Injected code doesn't run");
 	}
 	delete rootObject[expando];
 	try {
 		MalignantType = Construct.extend("(){}," + rootToken + "." + expando + "='baz',function");
 	} catch(e) {
 	} finally {
-		equal(rootObject[expando], undefined, "Injected code doesn't run");
+		assert.equal(rootObject[expando], undefined, "Injected code doesn't run");
 	}
 
 });
 
-QUnit.test("setters not invoked on extension (#28)", function(){
+QUnit.test("setters not invoked on extension (#28)", function(assert) {
 
 	var extending = true;
 	var Base = Construct.extend("Base",{
 		set something(value){
-			QUnit.ok(!extending, "called when not extending");
+			assert.ok(!extending, "called when not extending");
 		},
 		get something(){
 
@@ -227,17 +227,17 @@ QUnit.test("setters not invoked on extension (#28)", function(){
 	new Base().something = "foo";
 });
 
-QUnit.test("return alternative value simple", function(){
+QUnit.test("return alternative value simple", function(assert) {
 	var Alternative = function(){};
 	var Base = Construct.extend({
 		setup: function(){
 			return new Construct.ReturnValue( new Alternative() );
 		}
 	});
-	QUnit.ok(new Base() instanceof Alternative, "Should create an instance of Alternative");
+	assert.ok(new Base() instanceof Alternative, "Should create an instance of Alternative");
 });
 
-QUnit.test("return alternative value on setup (full case)", function(){
+QUnit.test("return alternative value on setup (full case)", function(assert) {
 	var Student = function(name, school){
 		this.name = name;
 		this.school = school;
@@ -257,12 +257,12 @@ QUnit.test("return alternative value on setup (full case)", function(){
 			this.isStudent = params.isStudent;
 		}
 	});
-	QUnit.equal(new Person({age: 12}).isStudent, false, "Age 12 cannot be a student");
-	QUnit.equal(new Person({age: 30}).isStudent, true, "Age 20 can be a student");
-	QUnit.ok(new Person({age: 30}) instanceof Student, "Should return an instance of Student");
+	assert.equal(new Person({age: 12}).isStudent, false, "Age 12 cannot be a student");
+	assert.equal(new Person({age: 30}).isStudent, true, "Age 20 can be a student");
+	assert.ok(new Person({age: 30}) instanceof Student, "Should return an instance of Student");
 });
 
-QUnit.test("extends defaults right", function(){
+QUnit.test("extends defaults right", function(assert) {
 	var BASE = Construct.extend({
 		defaults: {
 			foo: 'bar'
@@ -273,11 +273,11 @@ QUnit.test("extends defaults right", function(){
 			newProp: 'newVal'
 		}
 	}, {});
-	ok(INHERIT.defaults.foo === 'bar', 'Class must inherit defaults from the parent class');
-	ok(INHERIT.defaults.newProp === 'newVal', 'Class must have own defaults');
+	assert.ok(INHERIT.defaults.foo === 'bar', 'Class must inherit defaults from the parent class');
+	assert.ok(INHERIT.defaults.newProp === 'newVal', 'Class must have own defaults');
 });
 
-QUnit.test("enumerability", function(){
+QUnit.test("enumerability", function(assert) {
 	var Parent = Construct.extend("Parent", {});
 
 	var child = new Parent();
@@ -288,18 +288,18 @@ QUnit.test("enumerability", function(){
 		props[prop] = true;
 	}
 
-	QUnit.deepEqual(props, {
+	assert.deepEqual(props, {
 		foo: true
 	}, "only has ownProps");
 });
 
-QUnit.test("Has default init, setup functions", function(){
+QUnit.test("Has default init, setup functions", function(assert) {
 	var instance = new Construct();
-	QUnit.equal(typeof instance.init, "function", "has init");
-	QUnit.equal(typeof instance.setup, "function", "has setup");
+	assert.equal(typeof instance.init, "function", "has init");
+	assert.equal(typeof instance.setup, "function", "has setup");
 });
 
-QUnit.test("Extending should not update defaults nested objects", function() {
+QUnit.test("Extending should not update defaults nested objects", function(assert) {
 	var Parent = Construct.extend({
 		defaults: {
 			obj: {
@@ -316,6 +316,6 @@ QUnit.test("Extending should not update defaults nested objects", function() {
 		}
 	}, {});
 
-	QUnit.equal(Parent.defaults.obj.foo, "Bar", "Base defaults are not changed");
-	QUnit.equal(Child.defaults.obj.foo, "Baz", "Child defaults get defaults right");
+	assert.equal(Parent.defaults.obj.foo, "Bar", "Base defaults are not changed");
+	assert.equal(Child.defaults.obj.foo, "Baz", "Child defaults get defaults right");
 });
