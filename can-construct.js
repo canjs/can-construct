@@ -219,6 +219,9 @@ canReflect.assignMap(Construct, {
 	 * By default to extend a constructor, you must use [can-construct.extend extend].
 	 */
 	constructorExtends: true,
+
+	// This is a hook for adding legacy behaviors
+	_created: function(){},
 	/**
 	 * @function can-construct.newInstance newInstance
 	 * @parent can-construct.static
@@ -600,7 +603,7 @@ canReflect.assignMap(Construct, {
 		if (typeof shortName !== 'string') {
 			proto = klass;
 			klass = shortName;
-			shortName = null;
+			name = shortName = null;
 		}
 		if (!proto) {
 			proto = klass;
@@ -706,6 +709,10 @@ canReflect.assignMap(Construct, {
 		}
 		// Make sure our prototype looks nice.
 		defineNonEnumerable(Constructor.prototype, "constructor", Constructor);
+
+		// Global callback for legacy behaviors
+		Construct._created(name, Constructor);
+
 		// Call the class `setup` and `init`
 		var t = [_super_class].concat(Array.prototype.slice.call(arguments)),
 			args = Constructor.setup.apply(Constructor, t);
